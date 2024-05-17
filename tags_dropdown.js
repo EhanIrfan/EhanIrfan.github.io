@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('dropdown-input');
     const dropdownList = document.getElementById('dropdown-list');
+    const toggleAllCheckbox = document.getElementById('toggle-all');
     const selectedOptions = new Set();
 
     // Define the predetermined options
@@ -79,6 +80,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update the input value to show selected options
     function updateInputValue() {
         input.value = Array.from(selectedOptions).join(', ');
+
+        // Uncheck checkboxes for options that have been removed from the input
+        const checkboxes = dropdownList.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            if (!selectedOptions.has(checkbox.value)) {
+                checkbox.checked = false;
+            }
+        });
     }
 
     // Get selected values
@@ -92,7 +101,19 @@ document.addEventListener('DOMContentLoaded', () => {
         openDropdown();
     });
 
-    input.addEventListener('input', filterOptions);
+    input.addEventListener('input', () => {
+        const currentSelectedOptions = new Set(input.value.split(', ').filter(Boolean));
+        
+        // Find options that have been removed
+        selectedOptions.forEach(option => {
+            if (!currentSelectedOptions.has(option)) {
+                selectedOptions.delete(option);
+            }
+        });
+
+        filterOptions();
+        updateInputValue();
+    });
 
     document.addEventListener('click', (event) => {
         if (!event.target.closest('.dropdown')) {
@@ -105,4 +126,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Expose the getSelectedValues function to the global scope
     window.getSelectedValues = getSelectedValues;
+
+    // Event listener for toggle all checkbox
+    toggleAllCheckbox.addEventListener('change', (event) => {
+        const checkboxes = dropdownList.querySelectorAll('input[type="checkbox"]');
+        if (event.target.checked) {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+                selectedOptions.add(checkbox.value);
+            });
+        } else {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+                selectedOptions.delete(checkbox.value);
+            });
+        }
+        updateInputValue();
+    });
 });
