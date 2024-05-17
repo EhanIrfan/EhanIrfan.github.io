@@ -39,7 +39,7 @@ function createObjects(data) {
 
 function generateImageFilename(rarity, name, color) {
     const normalizedRarity = rarity.toLowerCase();
-    const normalizedName = name.toLowerCase().replace(/ /g, '').replace(/:/g, '').replace(/\(/g, '').replace(/\)/g, '');
+    const normalizedName = name ? name.toLowerCase().replace(/ /g, '').replace(/:/g, '').replace(/\(/g, '').replace(/\)/g, '') : '';
     const normalizedColor = color.toLowerCase();
     return normalizedColor + normalizedRarity + normalizedName + '.png';
 }
