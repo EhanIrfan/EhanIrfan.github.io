@@ -30,9 +30,11 @@ function createObjects(data) {
     const objects = [];
     for (let i = 1; i < data.length; i++) { // Start from index 1 to skip header row
         const [rarity, name, color, tags, ztags, epi, dbl] = data[i];
-        const img = generateImageFilename(rarity, name, color);
-        const fighter = new Fighter(rarity, name, color, tags.split("."), ztags.split("."), img, epi, "DBL" + dbl);
-        objects.push(fighter);
+        if (rarity && name && color && tags && ztags && epi && dbl{
+            const img = generateImageFilename(rarity, name, color);
+            const fighter = new Fighter(rarity, name, color, tags.split("."), ztags.split("."), img, epi, "DBL" + dbl);
+            objects.push(fighter);
+        }
     }
     return objects;
 }
