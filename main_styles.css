@@ -25,3 +25,34 @@ nav ul {
 .button:hover {
     background-color: #ff505f; /* Button background color on hover */
 }
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-input {
+  width: 200px; /* Adjust width as needed */
+  padding: 8px;
+  border: 1px solid #ccc;
+}
+
+.dropdown-list {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  list-style-type: none;
+  padding: 0;
+}
+
+.dropdown-list li {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.dropdown-list li:hover {
+  background-color: #f0f0f0;
+}
+
