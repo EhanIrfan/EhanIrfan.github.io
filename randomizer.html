@@ -4,22 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Legends Randomizer</title>
-    <link rel="stylesheet" href="main_styles.css"> <!-- If you have a CSS file -->
+    <link rel="stylesheet" href="main_styles.css"> <!-- CSS File -->
 </head>
 <body>
     <header>
         <h1>Random Random Random!</h1>
     </header>
 
-    <!-- rest of code goes here -->
-    <script src="parse_data.js"></script>
-
+    <!-- Dropdown container -->
     <div class="dropdown">
-      <input type="text" id="dropdown-input" placeholder="Select an option">
-      <ul class="dropdown-list" id="dropdown-list">
-        <!-- Options will be dynamically populated here -->
-        <script src="tags_dropdown.js"></script>
-      </ul>
+        <input type="text" id="dropdown-input" placeholder="Select the tags">
+        <ul class="dropdown-list" id="dropdown-list">
+            <!-- Options will be populated here -->
+        </ul>
     </div>
 
+    <script src="parse_data.js"></script> <!-- Your existing script -->
+    <script src="tags_dropdown.js"></script> <!-- Script for dropdown functionality -->
 </body>
+</html>
