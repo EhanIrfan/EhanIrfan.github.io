@@ -3,6 +3,13 @@ body {
     color: #fff; /* Dark text color */
 }
 
+/* This allows me to reset all the default stuff */
+nav ul {
+    list-style-type: none; /* Remove default list bullet points */
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+}
+
 /* Button styles */
 .button {
     display: inline-block;
