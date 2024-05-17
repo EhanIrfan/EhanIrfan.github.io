@@ -81,6 +81,11 @@ document.addEventListener('DOMContentLoaded', () => {
         input.value = Array.from(selectedOptions).join(', ');
     }
 
+    // Get selected values
+    function getSelectedValues() {
+        return Array.from(selectedOptions);
+    }
+
     // Event listeners
     input.addEventListener('click', (event) => {
         event.stopPropagation();
