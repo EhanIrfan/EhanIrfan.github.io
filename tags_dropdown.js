@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('dropdown-input');
     const dropdownList = document.getElementById('dropdown-list');
+    const selectedOptionsContainer = document.getElementById('selected-options');
     const toggleAllCheckbox = document.getElementById('toggle-all');
     const selectedOptions = new Set();
 
@@ -8,9 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
 
     // Populate the dropdown list with options
-    function populateDropdown() {
+    function populateDropdown(filteredOptions) {
         dropdownList.innerHTML = '';
-        options.forEach(option => {
+        filteredOptions.forEach(option => {
             const li = document.createElement('li');
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
@@ -27,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     selectedOptions.delete(option);
                 }
-                updateInputValue();
+                updateSelectedOptionsDisplay();
             });
 
             li.appendChild(checkbox);
@@ -50,44 +51,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function filterOptions() {
         const inputValue = input.value.toLowerCase();
         const filteredOptions = options.filter(option => option.toLowerCase().includes(inputValue));
-        dropdownList.innerHTML = '';
-        filteredOptions.forEach(option => {
-            const li = document.createElement('li');
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.value = option;
-
-            // Check if the option is already selected
-            if (selectedOptions.has(option)) {
-                checkbox.checked = true;
-            }
-
-            checkbox.addEventListener('change', (event) => {
-                if (event.target.checked) {
-                    selectedOptions.add(option);
-                } else {
-                    selectedOptions.delete(option);
-                }
-                updateInputValue();
-            });
-
-            li.appendChild(checkbox);
-            li.appendChild(document.createTextNode(option));
-            dropdownList.appendChild(li);
-        });
+        populateDropdown(filteredOptions);
     }
 
-    // Update the input value to show selected options
-    function updateInputValue() {
-        input.value = Array.from(selectedOptions).join(', ');
-
-        // Uncheck checkboxes for options that have been removed from the input
-        const checkboxes = dropdownList.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach(checkbox => {
-            if (!selectedOptions.has(checkbox.value)) {
-                checkbox.checked = false;
-            }
-        });
+    // Update the selected options display
+    function updateSelectedOptionsDisplay() {
+        selectedOptionsContainer.innerHTML = Array.from(selectedOptions).join(', ');
     }
 
     // Get selected values
@@ -101,19 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         openDropdown();
     });
 
-    input.addEventListener('input', () => {
-        const currentSelectedOptions = new Set(input.value.split(', ').filter(Boolean));
-        
-        // Find options that have been removed
-        selectedOptions.forEach(option => {
-            if (!currentSelectedOptions.has(option)) {
-                selectedOptions.delete(option);
-            }
-        });
-
-        filterOptions();
-        updateInputValue();
-    });
+    input.addEventListener('input', filterOptions);
 
     document.addEventListener('click', (event) => {
         if (!event.target.closest('.dropdown')) {
@@ -121,26 +78,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Populate the dropdown initially
-    populateDropdown();
+    // Populate the dropdown initially with all options
+    populateDropdown(options);
 
     // Expose the getSelectedValues function to the global scope
     window.getSelectedValues = getSelectedValues;
 
     // Event listener for toggle all checkbox
     toggleAllCheckbox.addEventListener('change', (event) => {
-        const checkboxes = dropdownList.querySelectorAll('input[type="checkbox"]');
-        if (event.target.checked) {
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = true;
-                selectedOptions.add(checkbox.value);
-            });
-        } else {
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-                selectedOptions.delete(checkbox.value);
-            });
-        }
-        updateInputValue();
-    });
-});
+        const checkbo
