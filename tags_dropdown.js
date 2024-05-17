@@ -102,4 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Populate the dropdown initially
     populateDropdown();
+
+    // Expose the getSelectedValues function to the global scope
+    window.getSelectedValues = getSelectedValues;
 });
