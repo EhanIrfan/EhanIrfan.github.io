@@ -1,4 +1,4 @@
-<script>
+
     class Fighter {
         constructor(rarity, name, color, tags, ztags, img, epi, dbl) {
             this.rarity = rarity;
@@ -44,4 +44,3 @@
         const normalizedColor = color.toLowerCase();
         return normalizedColor + normalizedRarity + normalizedName + '.png';
     }
-</script>
