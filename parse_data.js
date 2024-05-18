@@ -38,13 +38,12 @@ function createObjects(data) {
 }
 
 function generateImagePaths(rarity, name, color) {
-    const baseURL = 'https://raw.githubusercontent.com/EhanIrfan/LegendsRandomizer/';
     const normalizedRarity = rarity ? rarity.toLowerCase() : '';  
     const normalizedName = name ? name.toLowerCase().replace(/ /g, '').replace(/:/g, '').replace(/\(/g, '').replace(/\)/g, '') : '';
     const normalizedColor = color ? color.toLowerCase() : '';
     return {
-        rarity: `${baseURL}${normalizedRarity}.png`,
-        name: `${baseURL}${normalizedColor}${normalizedRarity}${normalizedName}.png`,
-        color: `${baseURL}${normalizedColor}.png`
+        rarity: `${normalizedRarity}.png`,
+        name: `${normalizedColor}${normalizedRarity}${normalizedName}.png`,
+        color: `${normalizedColor}.png`
     };
 }
