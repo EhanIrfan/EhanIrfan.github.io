@@ -12,6 +12,8 @@
         <h4>Select the tag(s) to be included in the randomization!</h4>
     </header>
 
+    <script src="parse_data.js" type="module"></script>
+    
     <!-- Dropdown container for tags -->
     <div class="dropdown tags-dropdown">
         <input type="text" id="tags-dropdown-input" class="dropdown-input" placeholder="Select the tags">
@@ -27,7 +29,7 @@
     <div id="tags-selected-options" class="selected-options"></div>
     
     <!-- Script for dropdown functionality for tags -->
-    <script src="tags_dropdown.js" type="module"></script>
+    <script src="tags_dropdown.js"></script>
 
     <header>
         <h4>Select the episode(s) to be included in the randomization!</h4>
@@ -48,7 +50,7 @@
     <div id="episodes-selected-options" class="selected-options"></div>
     
     <!-- Script for dropdown functionality for episodes -->
-    <script src="episode_dropdown.js" type="module"></script>
+    <script src="episode_dropdown.js"></script>
 
     <header>
         <h4>Select the fighter color(s) to be included in the randomization!</h4>
@@ -69,7 +71,7 @@
     <div id="colors-selected-options" class="selected-options"></div>
     
     <!-- Script for dropdown functionality for colors -->
-    <script src="colors_dropdown.js" type="module"></script>
+    <script src="colors_dropdown.js"></script>
 
     <header>
         <h4>Select the fighter rarity(s) to be included in the randomization!</h4>
@@ -88,16 +90,13 @@
     </div>
 
     <div id="rarities-selected-options" class="selected-options"></div>
+
+    <!-- Display area for combined images and names -->
+    <div id="combined-images-container"></div>
+    <div id="selected-fighters-names"></div>
     
     <!-- Script for dropdown functionality for rarities -->
-    <script src="rarities_dropdown.js" type="module"></script>
-
-    <!-- Container for the random team -->
-    <div id="random-team"></div>
-    <!-- Button to trigger randomization -->
-    <button id="randomize-button">Randomize Team</button>
-    
-    <!-- Script for randomization functionality -->
-    <script src="randomize_team.js" type="module"></script>
+    <script src="rarities_dropdown.js"></script>
+    <script src="display_images.js" type="module"></script>
 </body>
 </html>
