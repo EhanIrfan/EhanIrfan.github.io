@@ -6,7 +6,6 @@
     <title>Legends Randomizer</title>
     <link rel="stylesheet" href="main_styles.css"> <!-- CSS File -->
 </head>
-<script src="parse_data.js"></script> <!-- Parse Data for Randomization -->
 <body>
     <header>
         <h1>Team Randomizer!</h1>
@@ -14,41 +13,42 @@
         <h4>Select the tag(s) to be included in the randomization!</h4>
     </header>
 
-    <!-- Dropdown container -->
+    <!-- Dropdown container for tags -->
     <div class="dropdown">
-        <input type="text" id="dropdown-input" placeholder="Select the tags">
-        <ul class="dropdown-list" id="dropdown-list">
+        <input type="text" class="dropdown-input" placeholder="Select the tags">
+        <ul class="dropdown-list">
             <!-- Options will be populated here -->
         </ul>
     </div>
 
     <div>
-        <input type="checkbox" id="toggle-all"> Toggle All
+        <input type="checkbox" class="toggle-all"> Toggle All
     </div>
 
-    <div id="selected-options" class="selected-options"></div>
+    <div class="selected-options"></div>
     
-    <script src="tags_dropdown.js"></script> <!-- Script for dropdown functionality for tags -->
-
+    <!-- Script for dropdown functionality for tags -->
+    <script src="tags_dropdown.js"></script>
 
     <header>
         <h4>Select the episode(s) to be included in the randomization!</h4>
     </header>
 
-    <!-- Dropdown container -->
+    <!-- Dropdown container for episodes -->
     <div class="dropdown">
-        <input type="text" id="dropdown-input" placeholder="Select the episodes">
-        <ul class="dropdown-list" id="dropdown-list">
+        <input type="text" class="dropdown-input" placeholder="Select the episodes">
+        <ul class="dropdown-list">
             <!-- Options will be populated here -->
         </ul>
     </div>
 
     <div>
-        <input type="checkbox" id="toggle-all"> Toggle All
+        <input type="checkbox" class="toggle-all"> Toggle All
     </div>
 
-    <div id="selected-options" class="selected-options"></div>
+    <div class="selected-options"></div>
     
-    <script src="episode_dropdown.js"></script> <!-- Script for dropdown functionality for tags -->
+    <!-- Script for dropdown functionality for episodes -->
+    <script src="episode_dropdown.js"></script>
 </body>
 </html>
