@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const input = document.querySelector('.episode-dropdown .dropdown-input');
-    const dropdownList = document.querySelector('.episode-dropdown .dropdown-list');
-    const toggleAllCheckbox = document.querySelector('.episode-dropdown .toggle-all');
-    const selectedOptionsContainer = document.querySelector('.episode-dropdown .selected-options');
+    const input = document.querySelector('.episodes-dropdown .dropdown-input');
+    const dropdownList = document.querySelector('.episodes-dropdown .dropdown-list');
+    const toggleAllCheckbox = document.querySelector('.episodes-dropdown .toggle-all');
+    const selectedOptionsContainer = document.querySelector('.episodes-dropdown .selected-options');
     const selectedOptions = new Set();
 
     // Define the predetermined options
