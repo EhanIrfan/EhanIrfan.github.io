@@ -6,7 +6,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectedOptions = new Set();
 
     // Define the predetermined options
-    const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
+    const options = ["Saiyan", "Hybrid Saiyan", "Super Saiyan", "Super Saiyan 2",
+             "Super Saiyan 3", "Super Saiyan 4", "Super Saiyan God",
+             "Super Saiyan God SS", "Super Saiyan Rose", "Namekian",
+             "Android", "Shadow Dragon", "God of Destruction", "Angel",
+             "Kids", "Girls", "Regeneration", "Powerful Opponent",
+             "Transforming Warrior", "Lineage of Evil", "Minion", "Twins",
+             "Otherworld Warrior", "Fusion Warrior", "God Ki", "Son Family",
+             "Vegeta Clan", "Super Warrior", "Frieza Force", "Ginyu Force",
+             "Team Bardock", "Hera Clan", "Future", "GT", "Merging",
+             "Absorption", "Fusion", "Potara", "Rival Universe",
+             "Universe 2", "Universe 4", "Universe 6", "Universe 9",
+             "Universe 11", "Universe Rep", "DB", "Event Exclusive",
+             "Legends Road", "Game Originals"];
 
     // Populate the dropdown list with options
     function populateDropdown(filteredOptions) {
@@ -16,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.value = option;
+            checkbox.id = `option-${option}`;
 
             // Check if the option is already selected
             if (selectedOptions.has(option)) {
@@ -31,8 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateSelectedOptionsDisplay();
             });
 
+            const label = document.createElement('label');
+            label.htmlFor = `option-${option}`;
+            label.appendChild(document.createTextNode(option));
+
             li.appendChild(checkbox);
-            li.appendChild(document.createTextNode(option));
+            li.appendChild(label);
             dropdownList.appendChild(li);
         });
     }
