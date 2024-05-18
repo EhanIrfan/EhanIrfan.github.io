@@ -6,11 +6,12 @@
     <title>Legends Randomizer</title>
     <link rel="stylesheet" href="main_styles.css"> <!-- CSS File -->
 </head>
+<script src="parse_data.js"></script> <!-- Parse Data for Randomization -->
 <body>
     <header>
         <h1>Team Randomizer!</h1>
 
-        <h4>Select the tags for your character</h4>
+        <h4>Select the tag(s) to be included in the randomization!</h4>
     </header>
 
     <!-- Dropdown container -->
@@ -27,7 +28,27 @@
 
     <div id="selected-options" class="selected-options"></div>
     
-    <script src="parse_data.js"></script> <!-- Your existing script -->
-    <script src="tags_dropdown.js"></script> <!-- Script for dropdown functionality -->
+    <script src="tags_dropdown.js"></script> <!-- Script for dropdown functionality for tags -->
+
+
+    <header>
+        <h4>Select the episode(s) to be included in the randomization!</h4>
+    </header>
+
+    <!-- Dropdown container -->
+    <div class="dropdown">
+        <input type="text" id="dropdown-input" placeholder="Select the episodes">
+        <ul class="dropdown-list" id="dropdown-list">
+            <!-- Options will be populated here -->
+        </ul>
+    </div>
+
+    <div>
+        <input type="checkbox" id="toggle-all"> Toggle All
+    </div>
+
+    <div id="selected-options" class="selected-options"></div>
+    
+    <script src="episode_dropdown.js"></script> <!-- Script for dropdown functionality for tags -->
 </body>
 </html>
