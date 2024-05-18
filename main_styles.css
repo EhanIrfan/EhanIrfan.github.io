@@ -82,7 +82,7 @@ nav ul {
 
 .selected-option {
     background-color: #007bff;
-    color: white;
+    color: black;
     padding: 5px 10px;
     border-radius: 4px;
     display: flex;
