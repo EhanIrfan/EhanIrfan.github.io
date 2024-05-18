@@ -4,18 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectedOptionsContainer = document.getElementById('episodes-selected-options');
     const toggleAllCheckbox = document.getElementById('episodes-toggle-all');
     const selectedOptions = new Set();
+    let currentlyOpenDropdown = null;
 
-    // Define the predetermined options (example options)
-    const options = ["Dragon Ball Saga", "Saiyan Saga (Z)", "Frieza Saga (Z)",
-            "Android Saga (Z)", "Cell Saga (Z)", "Majin Buu Saga (Z)",
-            "Black Star Dragon Ball Saga (GT)", "Super Baby Saga (GT)",
-            "Super #17 Saga (GT)", "Shadow Dragon Saga (GT)",
-            "God of Destruction Beerus Saga (S)",
-            "Frieza Resurrected Saga (S)",
-            "God of Destruction Champa Saga (S)", "Future Trunks Saga (S)",
-            "Universe Survival Saga (S)", "Movies",
-            "Anime Originals Saga", "DRAGON BALL FighterZ",
-            "Dragon Ball Z: Kakarot"];
+    // Define the predetermined options
+    const options = ["Episode 1", "Episode 2", "Episode 3", "Episode 4", "Episode 5"];
 
     // Populate the dropdown list with options
     function populateDropdown(filteredOptions) {
@@ -53,12 +45,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Open the dropdown
     function openDropdown() {
+        if (currentlyOpenDropdown && currentlyOpenDropdown !== dropdownList) {
+            currentlyOpenDropdown.style.display = 'none';
+        }
         dropdownList.style.display = 'block';
+        currentlyOpenDropdown = dropdownList;
     }
 
     // Close the dropdown
     function closeDropdown() {
         dropdownList.style.display = 'none';
+        currentlyOpenDropdown = null;
     }
 
     // Filter options based on input
