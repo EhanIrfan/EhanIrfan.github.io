@@ -12,8 +12,6 @@
         <h4>Select the tag(s) to be included in the randomization!</h4>
     </header>
 
-    <script src="parse_data.js" type="module"></script>
-    
     <!-- Dropdown container for tags -->
     <div class="dropdown tags-dropdown">
         <input type="text" id="tags-dropdown-input" class="dropdown-input" placeholder="Select the tags">
@@ -91,12 +89,14 @@
 
     <div id="rarities-selected-options" class="selected-options"></div>
 
+    <!-- Randomize Button -->
+    <button id="randomize-button">Randomize</button>
+
     <!-- Display area for combined images and names -->
-    <div id="combined-images-container"></div>
+    <div id="combined-images-container" class="image-grid"></div>
     <div id="selected-fighters-names"></div>
     
-    <!-- Script for dropdown functionality for rarities -->
-    <script src="rarities_dropdown.js"></script>
+    <!-- Scripts -->
     <script src="display_images.js" type="module"></script>
 </body>
 </html>
