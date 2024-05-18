@@ -20,7 +20,6 @@ function loadImage(src) {
     });
 }
 
-// Function to combine images using canvas
 async function combineImages(paths) {
     const rarityImage = await loadImage(paths.rarity);
     const nameImage = await loadImage(paths.name);
@@ -35,27 +34,33 @@ async function combineImages(paths) {
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
 
-    // Calculate scaling factors for each image
-    const rarityScale = Math.min(canvasWidth / rarityImage.width, canvasHeight / rarityImage.height);
-    const nameScale = Math.min(canvasWidth / nameImage.width, canvasHeight / nameImage.height);
-    const colorScale = Math.min(canvasWidth / colorImage.width, canvasHeight / colorImage.height);
+    // Scale images to fit within the 200x200 box
+    const scaledRarityHeight = canvasHeight * 0.3; // 30% of canvas height
+    const scaledNameHeight = canvasHeight * 0.6; // 60% of canvas height
+    const scaledColorHeight = canvasHeight * 0.1; // 10% of canvas height
 
-    // Calculate scaled image dimensions
+    const rarityScale = scaledRarityHeight / rarityImage.height;
+    const nameScale = scaledNameHeight / nameImage.height;
+    const colorScale = scaledColorHeight / colorImage.height;
+
     const scaledRarityWidth = rarityImage.width * rarityScale;
-    const scaledRarityHeight = rarityImage.height * rarityScale;
     const scaledNameWidth = nameImage.width * nameScale;
-    const scaledNameHeight = nameImage.height * nameScale;
     const scaledColorWidth = colorImage.width * colorScale;
-    const scaledColorHeight = colorImage.height * colorScale;
 
-    // Draw scaled images on the canvas
-    ctx.drawImage(nameImage, 100, 100) ;
-    ctx.drawImage(rarityImage, 100, 0);
-    ctx.drawImage(colorImage, 100, 200);
+    // Calculate x positions to center the images horizontally
+    const rarityX = (canvasWidth - scaledRarityWidth) / 2;
+    const nameX = (canvasWidth - scaledNameWidth) / 2;
+    const colorX = (canvasWidth - scaledColorWidth) / 2;
+
+    // Draw images with the desired overlap
+    ctx.drawImage(rarityImage, rarityX, 0, scaledRarityWidth, scaledRarityHeight); // Top
+    ctx.drawImage(nameImage, nameX, scaledRarityHeight - scaledNameHeight * 0.2, scaledNameWidth, scaledNameHeight); // Middle, slightly overlapping rarity
+    ctx.drawImage(colorImage, colorX, canvasHeight - scaledColorHeight, scaledColorWidth, scaledColorHeight); // Bottom, slightly overlapping name
 
     // Return the combined image as a data URL
     return canvas.toDataURL();
 }
+
 
 
 
