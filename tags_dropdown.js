@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function getSelectedValues() {
         return Array.from(selectedOptions);
     }
-
+    
     // Event listeners
     input.addEventListener('click', (event) => {
         event.stopPropagation();
@@ -117,10 +117,20 @@ document.addEventListener('DOMContentLoaded', () => {
             closeDropdown();
         }
     });
-
+    
     // Populate the dropdown initially with all options
     populateDropdown(options);
 
+    // Add click event listener to dropdown list
+    document.getElementById("dropdown-list").addEventListener("click", function(event) {
+    const selectedOption = event.target.closest("li"); // Find the closest li element
+    if (selectedOption) {
+        const checkbox = selectedOption.querySelector("input[type='checkbox']");
+        if (checkbox) {
+            checkbox.checked = !checkbox.checked; // Toggle checkbox state
+        }
+    }
+});
     // Expose the getSelectedValues function to the global scope
     window.getSelectedValues = getSelectedValues;
 
