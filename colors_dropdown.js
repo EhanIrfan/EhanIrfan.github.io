@@ -132,4 +132,19 @@ document.addEventListener('DOMContentLoaded', () => {
     window.getSelectedValues = getSelectedValues;
 
     // Event listener for toggle all checkbox
-    toggleAllCheckbox.addEventListener('change', (event
+    toggleAllCheckbox.addEventListener('change', (event) => {
+        const checkboxes = dropdownList.querySelectorAll('input[type="checkbox"]');
+        if (event.target.checked) {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+                selectedOptions.add(checkbox.value);
+            });
+        } else {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+                selectedOptions.delete(checkbox.value);
+            });
+        }
+        updateSelectedOptionsDisplay(); // Update selected options display after checkbox change
+    });
+});
