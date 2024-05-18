@@ -42,8 +42,8 @@ function generateImagePaths(rarity, name, color) {
     const normalizedName = name ? name.toLowerCase().replace(/ /g, '').replace(/:/g, '').replace(/\(/g, '').replace(/\)/g, '') : '';
     const normalizedColor = color ? color.toLowerCase() : '';
     return {
-        rarity: `images/${normalizedRarity}.png`,
-        name: `images/${normalizedColor}${normalizedRarity}${normalizedName}.png`,
-        color: `images/${normalizedColor}.png`
+        rarity: `${normalizedRarity}.png`,
+        name: `${normalizedColor}${normalizedRarity}${normalizedName}.png`,
+        color: `${normalizedColor}.png`
     };
 }
