@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     selectedOptions.delete(option);
                 }
-                updateSelectedOptionsDisplay();
+                updateSelectedOptionsDisplay(); // Update selected options display after checkbox change
             });
 
             const label = document.createElement('label');
@@ -79,26 +79,15 @@ document.addEventListener('DOMContentLoaded', () => {
             tag.className = 'selected-option';
             tag.textContent = option;
 
-            const removeButton = document.createElement('span');
-            removeButton.className = 'remove-option';
-            removeButton.textContent = 'x';
-            removeButton.addEventListener('click', () => {
+            tag.addEventListener('click', () => {
                 selectedOptions.delete(option);
-                updateSelectedOptionsDisplay();
+                updateSelectedOptionsDisplay(); // Update selected options display after option removal
                 const checkbox = document.getElementById(`option-${option}`);
                 if (checkbox) {
                     checkbox.checked = false;
                 }
             });
-
-                // Add click event listener to each selected option
-            document.querySelectorAll(".selected-option").forEach(option => {
-                option.addEventListener("click", function() {
-                    this.remove(); // Remove the clicked selected option
-                });
-            });
             
-            tag.appendChild(removeButton);
             selectedOptionsContainer.appendChild(tag);
         });
 
@@ -130,16 +119,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add click event listener to dropdown list
     document.getElementById("dropdown-list").addEventListener("click", function(event) {
-    const selectedOption = event.target.closest("li"); // Find the closest li element
-    if (selectedOption) {
-        const checkbox = selectedOption.querySelector("input[type='checkbox']");
-        if (checkbox) {
-            checkbox.checked = !checkbox.checked; // Toggle checkbox state
+        const selectedOption = event.target.closest("li"); // Find the closest li element
+        if (selectedOption) {
+            const checkbox = selectedOption.querySelector("input[type='checkbox']");
+            if (checkbox) {
+                checkbox.checked = !checkbox.checked; // Toggle checkbox state
+                selectedOptions.add(checkbox.value); // Add or remove option from selected options
+                updateSelectedOptionsDisplay(); // Update selected options display after checkbox change
+            }
         }
-    }
-});
-    
-    
+    });
+
     // Expose the getSelectedValues function to the global scope
     window.getSelectedValues = getSelectedValues;
 
@@ -152,11 +142,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectedOptions.add(checkbox.value);
             });
         } else {
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
+            checkboxes.forEach(checkbox => {checkbox.checked = false;
                 selectedOptions.delete(checkbox.value);
-            });
-        }
-        updateSelectedOptionsDisplay();
+                });
+                }
+            updateSelectedOptionsDisplay(); // Update selected options display after checkbox change
     });
 });
+               
