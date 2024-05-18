@@ -90,32 +90,23 @@ nav ul {
     border-radius: 4px;
     display: flex;
     align-items: center;
+    cursor: pointer; /* Add cursor pointer */
+}
+
+.selected-option:hover {
+    background-color: #8b0000; /* Dark red background color */
 }
 
 .selected-option .remove-option {
     margin-left: 5px;
-    cursor: pointer;
     font-weight: bold;
-}
-
-.selected-option .remove-option:hover {
-    color: #ff0000;
 }
 
 #toggle-all {
     margin-top: 10px;
 }
-
-.selected-option .remove-option {
-    margin-left: 5px;
-    cursor: pointer;
-    font-weight: bold;
 }
 
 .selected-option .remove-option:hover {
     color: #ff0000;
-}
-
-#toggle-all {
-    margin-top: 10px;
 }
