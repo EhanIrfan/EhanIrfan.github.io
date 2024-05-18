@@ -30,15 +30,15 @@ async function combineImages(paths) {
     const ctx = canvas.getContext('2d');
 
     // Set canvas size based on the images size
-    const width = Math.max(rarityImage.width, nameImage.width, colorImage.width);
-    const height = rarityImage.height + nameImage.height + colorImage.height * 0.5; // Adjust for minor overlap
+    const width = 200
+    const height = 200
     canvas.width = width;
     canvas.height = height;
 
     // Draw images on the canvas
     ctx.drawImage(rarityImage, (width - rarityImage.width) / 2, 0); // Centered at the top
-    ctx.drawImage(nameImage, (width - nameImage.width) / 2, rarityImage.height - 20); // Positioned below rarity with minor overlap
-    ctx.drawImage(colorImage, (width - colorImage.width) / 2, rarityImage.height + nameImage.height - 20); // Positioned at the bottom with overlap
+    ctx.drawImage(nameImage, (width - nameImage.width) / 2, 100); // Positioned below rarity with minor overlap
+    ctx.drawImage(colorImage, (width - colorImage.width) / 2, 190); // Positioned at the bottom with overlap
 
     // Return the combined image as a data URL
     return canvas.toDataURL();
