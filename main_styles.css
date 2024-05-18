@@ -63,10 +63,13 @@ nav ul {
 .dropdown-list li {
     padding: 10px;
     border-bottom: 1px solid #ddd;
+    color: black; /* Change text color to black */
 }
 
-.dropdown-list li:hover {
-    background-color: #f1f1f1;
+.dropdown-list li:hover,
+.dropdown-list li input[type="checkbox"]:checked + label {
+    background-color: #8b0000; /* Dark red background color */
+    color: #fff; /* White text color */
 }
 
 .dropdown-list input[type="checkbox"] {
@@ -82,11 +85,25 @@ nav ul {
 
 .selected-option {
     background-color: #007bff;
-    color: black;
+    color: white;
     padding: 5px 10px;
     border-radius: 4px;
     display: flex;
     align-items: center;
+}
+
+.selected-option .remove-option {
+    margin-left: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.selected-option .remove-option:hover {
+    color: #ff0000;
+}
+
+#toggle-all {
+    margin-top: 10px;
 }
 
 .selected-option .remove-option {
