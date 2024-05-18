@@ -4,21 +4,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectedOptionsContainer = document.getElementById('tags-selected-options');
     const toggleAllCheckbox = document.getElementById('tags-toggle-all');
     const selectedOptions = new Set();
+    let currentlyOpenDropdown = null;
 
     // Define the predetermined options
     const options = ["Saiyan", "Hybrid Saiyan", "Super Saiyan", "Super Saiyan 2",
-             "Super Saiyan 3", "Super Saiyan 4", "Super Saiyan God",
-             "Super Saiyan God SS", "Super Saiyan Rose", "Namekian",
-             "Android", "Shadow Dragon", "God of Destruction", "Angel",
-             "Kids", "Girls", "Regeneration", "Powerful Opponent",
-             "Transforming Warrior", "Lineage of Evil", "Minion", "Twins",
-             "Otherworld Warrior", "Fusion Warrior", "God Ki", "Son Family",
-             "Vegeta Clan", "Super Warrior", "Frieza Force", "Ginyu Force",
-             "Team Bardock", "Hera Clan", "Future", "GT", "Merging",
-             "Absorption", "Fusion", "Potara", "Rival Universe",
-             "Universe 2", "Universe 4", "Universe 6", "Universe 9",
-             "Universe 11", "Universe Rep", "DB", "Event Exclusive",
-             "Legends Road", "Game Originals"];
+                     "Super Saiyan 3", "Super Saiyan 4", "Super Saiyan God",
+                     "Super Saiyan God SS", "Super Saiyan Rose", "Namekian",
+                     "Android", "Shadow Dragon", "God of Destruction", "Angel",
+                     "Kids", "Girls", "Regeneration", "Powerful Opponent",
+                     "Transforming Warrior", "Lineage of Evil", "Minion", "Twins",
+                     "Otherworld Warrior", "Fusion Warrior", "God Ki", "Son Family",
+                     "Vegeta Clan", "Super Warrior", "Frieza Force", "Ginyu Force",
+                     "Team Bardock", "Hera Clan", "Future", "GT", "Merging",
+                     "Absorption", "Fusion", "Potara", "Rival Universe",
+                     "Universe 2", "Universe 4", "Universe 6", "Universe 9",
+                     "Universe 11", "Universe Rep", "DB", "Event Exclusive",
+                     "Legends Road", "Game Originals"];
 
     // Populate the dropdown list with options
     function populateDropdown(filteredOptions) {
@@ -56,12 +57,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Open the dropdown
     function openDropdown() {
+        if (currentlyOpenDropdown && currentlyOpenDropdown !== dropdownList) {
+            currentlyOpenDropdown.style.display = 'none';
+        }
         dropdownList.style.display = 'block';
+        currentlyOpenDropdown = dropdownList;
     }
 
     // Close the dropdown
     function closeDropdown() {
         dropdownList.style.display = 'none';
+        currentlyOpenDropdown = null;
     }
 
     // Filter options based on input
