@@ -3,93 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Legends Randomizer</title>
-    <link rel="stylesheet" href="main_styles.css"> <!-- CSS File -->
+    <title>Legends Hub</title>
+    <link rel="stylesheet" href="main_styles.css"> 
 </head>
 <body>
     <header>
-        <h1>Team Randomizer!</h1>
-        <h4>Select the tag(s) to be included in the randomization!</h4>
+        <h1>DBL is a fun game</h1>
     </header>
-
-    <!-- Dropdown container for tags -->
-    <div class="dropdown tags-dropdown">
-        <input type="text" id="tags-dropdown-input" class="dropdown-input" placeholder="Select the tags">
-        <ul id="tags-dropdown-list" class="dropdown-list">
-            <!-- Options will be populated here -->
-        </ul>
-    </div>
-
-    <div>
-        <input type="checkbox" id="tags-toggle-all" class="tags-toggle-all"> Toggle All
-    </div>
-
-    <div id="tags-selected-options" class="selected-options"></div>
     
-    <!-- Script for dropdown functionality for tags -->
-    <script src="tags_dropdown.js"></script>
-
-    <header>
-        <h4>Select the episode(s) to be included in the randomization!</h4>
-    </header>
-
-    <!-- Dropdown container for episodes -->
-    <div class="dropdown episodes-dropdown">
-        <input type="text" id="episodes-dropdown-input" class="dropdown-input" placeholder="Select the episodes">
-        <ul id="episodes-dropdown-list" class="dropdown-list">
-            <!-- Options will be populated here -->
+    <nav>
+        <ul>
+            <li><a class="button" href="guess_who.html">Guess Who</a></li>
+            <li><a class="button" href="randomizer.html">Randomizer</a></li>
         </ul>
-    </div>
+    </nav>
 
-    <div>
-        <input type="checkbox" id="episodes-toggle-all" class="episodes-toggle-all"> Toggle All
-    </div>
-
-    <div id="episodes-selected-options" class="selected-options"></div>
-    
-    <!-- Script for dropdown functionality for episodes -->
-    <script src="episode_dropdown.js"></script>
-
-    <header>
-        <h4>Select the fighter color(s) to be included in the randomization!</h4>
-    </header>
-
-    <!-- Dropdown container for colors -->
-    <div class="dropdown colors-dropdown">
-        <input type="text" id="colors-dropdown-input" class="dropdown-input" placeholder="Select the colors">
-        <ul id="colors-dropdown-list" class="dropdown-list">
-            <!-- Options will be populated here -->
-        </ul>
-    </div>
-
-    <div>
-        <input type="checkbox" id="colors-toggle-all" class="colors-toggle-all"> Toggle All
-    </div>
-
-    <div id="colors-selected-options" class="selected-options"></div>
-    
-    <!-- Script for dropdown functionality for colors -->
-    <script src="colors_dropdown.js"></script>
-
-    <header>
-        <h4>Select the fighter rarity(s) to be included in the randomization!</h4>
-    </header>
-
-    <!-- Dropdown container for rarities -->
-    <div class="dropdown rarities-dropdown">
-        <input type="text" id="rarities-dropdown-input" class="dropdown-input" placeholder="Select the rarities">
-        <ul id="rarities-dropdown-list" class="dropdown-list">
-            <!-- Options will be populated here -->
-        </ul>
-    </div>
-
-    <div>
-        <input type="checkbox" id="rarities-toggle-all" class="rarities-toggle-all"> Toggle All
-    </div>
-
-    <div id="rarities-selected-options" class="selected-options"></div>
-    
-    <!-- Script for dropdown functionality for rarities -->
-    <script src="rarities_dropdown.js"></script>
 </body>
 </html>
