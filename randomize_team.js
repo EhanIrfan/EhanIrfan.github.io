@@ -29,20 +29,34 @@ async function combineImages(paths) {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
 
-    // Set canvas size based on the images size
-    const width = 200
-    const height = 200
-    canvas.width = width;
-    canvas.height = height;
+    // Set canvas size
+    const canvasWidth = 200;
+    const canvasHeight = 200;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
 
-    // Draw images on the canvas
-    ctx.drawImage(rarityImage, (width - rarityImage.width) / 2, 0); // Centered at the top
-    ctx.drawImage(nameImage, (width - nameImage.width) / 2, 100); // Positioned below rarity with minor overlap
-    ctx.drawImage(colorImage, (width - colorImage.width) / 2, 190); // Positioned at the bottom with overlap
+    // Calculate scaling factors for each image
+    const rarityScale = Math.min(canvasWidth / rarityImage.width, canvasHeight / rarityImage.height);
+    const nameScale = Math.min(canvasWidth / nameImage.width, canvasHeight / nameImage.height);
+    const colorScale = Math.min(canvasWidth / colorImage.width, canvasHeight / colorImage.height);
+
+    // Calculate scaled image dimensions
+    const scaledRarityWidth = rarityImage.width * rarityScale;
+    const scaledRarityHeight = rarityImage.height * rarityScale;
+    const scaledNameWidth = nameImage.width * nameScale;
+    const scaledNameHeight = nameImage.height * nameScale;
+    const scaledColorWidth = colorImage.width * colorScale;
+    const scaledColorHeight = colorImage.height * colorScale;
+
+    // Draw scaled images on the canvas
+    ctx.drawImage(rarityImage, (canvasWidth - scaledRarityWidth) / 2, 0, scaledRarityWidth, scaledRarityHeight);
+    ctx.drawImage(nameImage, (canvasWidth - scaledNameWidth) / 2, (canvasHeight - scaledNameHeight - scaledColorHeight) / 2, scaledNameWidth, scaledNameHeight);
+    ctx.drawImage(colorImage, (canvasWidth - scaledColorWidth) / 2, (canvasHeight - scaledColorHeight) / 2 + scaledNameHeight, scaledColorWidth, scaledColorHeight);
 
     // Return the combined image as a data URL
     return canvas.toDataURL();
 }
+
 
 
 // Function to select six random fighters and display them
@@ -71,13 +85,13 @@ async function randomizeTeam(fighters) {
         img.alt = fighter.name;
 
         const name = document.createElement('p');
-        name.textContent = fighter.name;
+        name.textContent = fighter.name + " " + fighter.dbl;
 
         fighterDiv.appendChild(img);
         randomTeamContainer.appendChild(fighterDiv);
 
         // Add names to the names list
-        namesList.appendChild((name + " " + fighter.dbl));
+        namesList.appendChild(name);
     }
 
     // Append the names list to the random team container
