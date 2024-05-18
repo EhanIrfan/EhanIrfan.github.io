@@ -77,7 +77,7 @@ async function randomizeTeam(fighters) {
         randomTeamContainer.appendChild(fighterDiv);
 
         // Add names to the names list
-        namesList.appendChild(name);
+        namesList.appendChild(name + " " + fighter.dbl);
     }
 
     // Append the names list to the random team container
