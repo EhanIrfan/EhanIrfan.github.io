@@ -6,19 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectedOptions = new Set();
 
     // Define the predetermined options
-    const options = ["Saiyan", "Hybrid Saiyan", "Super Saiyan", "Super Saiyan 2",
-             "Super Saiyan 3", "Super Saiyan 4", "Super Saiyan God",
-             "Super Saiyan God SS", "Super Saiyan Rose", "Namekian",
-             "Android", "Shadow Dragon", "God of Destruction", "Angel",
-             "Kids", "Girls", "Regeneration", "Powerful Opponent",
-             "Transforming Warrior", "Lineage of Evil", "Minion", "Twins",
-             "Otherworld Warrior", "Fusion Warrior", "God Ki", "Son Family",
-             "Vegeta Clan", "Super Warrior", "Frieza Force", "Ginyu Force",
-             "Team Bardock", "Hera Clan", "Future", "GT", "Merging",
-             "Absorption", "Fusion", "Potara", "Rival Universe",
-             "Universe 2", "Universe 4", "Universe 6", "Universe 9",
-             "Universe 11", "Universe Rep", "DB", "Event Exclusive",
-             "Legends Road", "Game Originals"];
+    const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
 
     // Populate the dropdown list with options
     function populateDropdown(filteredOptions) {
@@ -73,7 +61,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update the selected options display
     function updateSelectedOptionsDisplay() {
-        selectedOptionsContainer.innerHTML = Array.from(selectedOptions).join(', ');
+        selectedOptionsContainer.innerHTML = '';
+        selectedOptions.forEach(option => {
+            const tag = document.createElement('div');
+            tag.className = 'selected-option';
+            tag.textContent = option;
+
+            const removeButton = document.createElement('span');
+            removeButton.className = 'remove-option';
+            removeButton.textContent = 'x';
+            removeButton.addEventListener('click', () => {
+                selectedOptions.delete(option);
+                updateSelectedOptionsDisplay();
+                const checkbox = document.getElementById(`option-${option}`);
+                if (checkbox) {
+                    checkbox.checked = false;
+                }
+            });
+
+            tag.appendChild(removeButton);
+            selectedOptionsContainer.appendChild(tag);
+        });
+
+        // Update the input value to reflect selected options
+        input.value = '';
     }
 
     // Get selected values
