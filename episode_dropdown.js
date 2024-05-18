@@ -1,24 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const input = document.getElementById('tags-dropdown-input');
-    const dropdownList = document.getElementById('tags-dropdown-list');
-    const selectedOptionsContainer = document.getElementById('tags-selected-options');
-    const toggleAllCheckbox = document.getElementById('tags-toggle-all');
+    const input = document.getElementById('episodes-dropdown-input');
+    const dropdownList = document.getElementById('episodes-dropdown-list');
+    const selectedOptionsContainer = document.getElementById('episodes-selected-options');
+    const toggleAllCheckbox = document.getElementById('episodes-toggle-all');
     const selectedOptions = new Set();
 
-    // Define the predetermined options
-    const options = ["Saiyan", "Hybrid Saiyan", "Super Saiyan", "Super Saiyan 2",
-             "Super Saiyan 3", "Super Saiyan 4", "Super Saiyan God",
-             "Super Saiyan God SS", "Super Saiyan Rose", "Namekian",
-             "Android", "Shadow Dragon", "God of Destruction", "Angel",
-             "Kids", "Girls", "Regeneration", "Powerful Opponent",
-             "Transforming Warrior", "Lineage of Evil", "Minion", "Twins",
-             "Otherworld Warrior", "Fusion Warrior", "God Ki", "Son Family",
-             "Vegeta Clan", "Super Warrior", "Frieza Force", "Ginyu Force",
-             "Team Bardock", "Hera Clan", "Future", "GT", "Merging",
-             "Absorption", "Fusion", "Potara", "Rival Universe",
-             "Universe 2", "Universe 4", "Universe 6", "Universe 9",
-             "Universe 11", "Universe Rep", "DB", "Event Exclusive",
-             "Legends Road", "Game Originals"];
+    // Define the predetermined options (example options)
+    const options = ["Episode 1", "Episode 2", "Episode 3", "Episode 4", "Episode 5"];
 
     // Populate the dropdown list with options
     function populateDropdown(filteredOptions) {
@@ -28,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.value = option;
-            checkbox.id = `tags-option-${option}`;
+            checkbox.id = `episodes-option-${option}`;
 
             // Check if the option is already selected
             if (selectedOptions.has(option)) {
@@ -45,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const label = document.createElement('label');
-            label.htmlFor = `tags-option-${option}`;
+            label.htmlFor = `episodes-option-${option}`;
             label.appendChild(document.createTextNode(option));
 
             li.appendChild(checkbox);
@@ -82,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tag.addEventListener('click', () => {
                 selectedOptions.delete(option);
                 updateSelectedOptionsDisplay(); // Update selected options display after option removal
-                const checkbox = document.getElementById(`tags-option-${option}`);
+                const checkbox = document.getElementById(`episodes-option-${option}`);
                 if (checkbox) {
                     checkbox.checked = false;
                 }
@@ -109,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
     input.addEventListener('input', filterOptions);
 
     document.addEventListener('click', (event) => {
-        if (!event.target.closest('.tags-dropdown')) {
+        if (!event.target.closest('.episodes-dropdown')) {
             closeDropdown();
         }
     });
@@ -118,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     populateDropdown(options);
 
     // Add click event listener to dropdown list
-    document.getElementById("tags-dropdown-list").addEventListener("click", function(event) {
+    document.getElementById("episodes-dropdown-list").addEventListener("click", function(event) {
         const selectedOption = event.target.closest("li"); // Find the closest li element
         if (selectedOption) {
             const checkbox = selectedOption.querySelector("input[type='checkbox']");
