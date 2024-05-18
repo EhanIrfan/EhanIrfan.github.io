@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectedOptionsContainer = document.getElementById('colors-selected-options');
     const toggleAllCheckbox = document.getElementById('colors-toggle-all');
     const selectedOptions = new Set();
+    let currentlyOpenDropdown = null;
 
     // Define the predetermined options
     const options = ["Red", "Blue", "Green", "Yellow", "Purple"];
@@ -44,12 +45,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Open the dropdown
     function openDropdown() {
+        if (currentlyOpenDropdown && currentlyOpenDropdown !== dropdownList) {
+            currentlyOpenDropdown.style.display = 'none';
+        }
         dropdownList.style.display = 'block';
+        currentlyOpenDropdown = dropdownList;
     }
 
     // Close the dropdown
     function closeDropdown() {
         dropdownList.style.display = 'none';
+        currentlyOpenDropdown = null;
     }
 
     // Filter options based on input
@@ -126,19 +132,4 @@ document.addEventListener('DOMContentLoaded', () => {
     window.getSelectedValues = getSelectedValues;
 
     // Event listener for toggle all checkbox
-    toggleAllCheckbox.addEventListener('change', (event) => {
-        const checkboxes = dropdownList.querySelectorAll('input[type="checkbox"]');
-        if (event.target.checked) {
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = true;
-                selectedOptions.add(checkbox.value);
-            });
-        } else {
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-                selectedOptions.delete(checkbox.value);
-            });
-        }
-        updateSelectedOptionsDisplay(); // Update selected options display after checkbox change
-    });
-});
+    toggleAllCheckbox.addEventListener('change', (event
