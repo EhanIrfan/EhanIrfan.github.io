@@ -1,11 +1,11 @@
 class Fighter {
-    constructor(rarity, name, color, tags, ztags, img, epi, dbl) {
+    constructor(rarity, name, color, tags, ztags, imgPaths, epi, dbl) {
         this.rarity = rarity;
         this.name = name;
         this.color = color;
         this.tags = tags;
         this.ztags = ztags;
-        this.img = img;
+        this.imgPaths = imgPaths; // Store paths of individual images
         this.epi = epi;
         this.dbl = dbl;
     }
@@ -29,17 +29,21 @@ function createObjects(data) {
     for (let i = 1; i < data.length; i++) { // Start from index 1 to skip header row
         const [rarity, name, color, tags, ztags, epi, dbl] = data[i];
         if (rarity && name && color && tags && ztags && epi && dbl) {
-            const img = generateImageFilename(rarity, name, color);
-            const fighter = new Fighter(rarity, name, color, tags.split("."), ztags.split("."), img, epi, "DBL" + dbl);
+            const imgPaths = generateImagePaths(rarity, name, color);
+            const fighter = new Fighter(rarity, name, color, tags.split("."), ztags.split("."), imgPaths, epi, "DBL" + dbl);
             objects.push(fighter);
         }
     }
     return objects;
 }
 
-function generateImageFilename(rarity, name, color) {
+function generateImagePaths(rarity, name, color) {
     const normalizedRarity = rarity ? rarity.toLowerCase() : '';  
     const normalizedName = name ? name.toLowerCase().replace(/ /g, '').replace(/:/g, '').replace(/\(/g, '').replace(/\)/g, '') : '';
     const normalizedColor = color ? color.toLowerCase() : '';
-    return normalizedColor + normalizedRarity + normalizedName + '.png';
+    return {
+        rarity: `images/${normalizedRarity}.png`,
+        name: `images/${normalizedColor}${normalizedRarity}${normalizedName}.png`,
+        color: `images/${normalizedColor}.png`
+    };
 }
