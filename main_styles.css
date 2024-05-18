@@ -140,3 +140,17 @@ nav ul {
 .selected-option .remove-option:hover {
     color: #ff0000;
 }
+
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    justify-items: center;
+    margin-bottom: 20px;
+}
+
+.image-grid img {
+    border: 2px solid #fff;
+    border-radius: 5px;
+}
+
