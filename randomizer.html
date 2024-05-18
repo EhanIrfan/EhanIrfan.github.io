@@ -14,17 +14,17 @@
 
     <!-- Dropdown container for tags -->
     <div class="dropdown tags-dropdown">
-        <input type="text" class="dropdown-input" placeholder="Select the tags">
-        <ul class="dropdown-list">
+        <input type="text" id="tags-dropdown-input" class="dropdown-input" placeholder="Select the tags">
+        <ul id="tags-dropdown-list" class="dropdown-list">
             <!-- Options will be populated here -->
         </ul>
     </div>
 
     <div>
-        <input type="checkbox" class="tags-toggle-all"> Toggle All
+        <input type="checkbox" id="tags-toggle-all" class="tags-toggle-all"> Toggle All
     </div>
 
-    <div class="tags-selected-options"></div>
+    <div id="tags-selected-options" class="selected-options"></div>
     
     <!-- Script for dropdown functionality for tags -->
     <script src="tags_dropdown.js"></script>
@@ -35,17 +35,17 @@
 
     <!-- Dropdown container for episodes -->
     <div class="dropdown episodes-dropdown">
-        <input type="text" class="dropdown-input" placeholder="Select the episodes">
-        <ul class="dropdown-list">
+        <input type="text" id="episodes-dropdown-input" class="dropdown-input" placeholder="Select the episodes">
+        <ul id="episodes-dropdown-list" class="dropdown-list">
             <!-- Options will be populated here -->
         </ul>
     </div>
 
     <div>
-        <input type="checkbox" class="episodes-toggle-all"> Toggle All
+        <input type="checkbox" id="episodes-toggle-all" class="episodes-toggle-all"> Toggle All
     </div>
 
-    <div class="episodes-selected-options"></div>
+    <div id="episodes-selected-options" class="selected-options"></div>
     
     <!-- Script for dropdown functionality for episodes -->
     <script src="episode_dropdown.js"></script>
