@@ -9,8 +9,43 @@ function shuffleArray(array) {
     return array;
 }
 
+// Function to load an image
+function loadImage(src) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous'; // Handle CORS if needed
+        img.onload = () => resolve(img);
+        img.onerror = err => reject(err);
+        img.src = src;
+    });
+}
+
+// Function to combine images using canvas
+async function combineImages(paths) {
+    const rarityImage = await loadImage(paths.rarity);
+    const nameImage = await loadImage(paths.name);
+    const colorImage = await loadImage(paths.color);
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Set canvas size based on the images size
+    const width = Math.max(rarityImage.width, nameImage.width, colorImage.width);
+    const height = rarityImage.height + nameImage.height + colorImage.height;
+    canvas.width = width;
+    canvas.height = height;
+
+    // Draw images on the canvas
+    ctx.drawImage(rarityImage, 0, 0);
+    ctx.drawImage(nameImage, 0, rarityImage.height);
+    ctx.drawImage(colorImage, 0, rarityImage.height + nameImage.height);
+
+    // Return the combined image as a data URL
+    return canvas.toDataURL();
+}
+
 // Function to select six random fighters and display them
-function randomizeTeam(fighters) {
+async function randomizeTeam(fighters) {
     // Shuffle the fighters array
     const shuffledFighters = shuffleArray(fighters);
 
@@ -21,21 +56,31 @@ function randomizeTeam(fighters) {
     const randomTeamContainer = document.getElementById('random-team');
     randomTeamContainer.innerHTML = '';
 
-    selectedFighters.forEach(fighter => {
+    const namesList = document.createElement('div');
+    namesList.className = 'names-list';
+
+    for (const fighter of selectedFighters) {
+        const combinedImageSrc = await combineImages(fighter.imgPaths);
+
         const fighterDiv = document.createElement('div');
         fighterDiv.className = 'fighter';
 
         const img = document.createElement('img');
-        img.src = fighter.img; // Assuming the img property is the path to the combined image
+        img.src = combinedImageSrc;
         img.alt = fighter.name;
 
         const name = document.createElement('p');
         name.textContent = fighter.name;
 
         fighterDiv.appendChild(img);
-        fighterDiv.appendChild(name);
         randomTeamContainer.appendChild(fighterDiv);
-    });
+
+        // Add names to the names list
+        namesList.appendChild(name);
+    }
+
+    // Append the names list to the random team container
+    randomTeamContainer.appendChild(namesList);
 }
 
 // Event listener for the randomize button
@@ -43,6 +88,4 @@ document.getElementById('randomize-button').addEventListener('click', () => {
     fetchFighters().then(fighters => {
         randomizeTeam(fighters);
     }).catch(error => {
-        console.error('Error:', error);
-    });
-});
+        console
