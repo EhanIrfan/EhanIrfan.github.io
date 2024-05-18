@@ -49,13 +49,14 @@ async function combineImages(paths) {
     const scaledColorHeight = colorImage.height * colorScale;
 
     // Draw scaled images on the canvas
-    ctx.drawImage(rarityImage, (canvasWidth - scaledRarityWidth) / 2, 0, scaledRarityWidth, scaledRarityHeight);
     ctx.drawImage(nameImage, (canvasWidth - scaledNameWidth) / 2, (canvasHeight - scaledNameHeight - scaledColorHeight) / 2, scaledNameWidth, scaledNameHeight);
+    ctx.drawImage(rarityImage, (canvasWidth - scaledRarityWidth) / 2, (canvasHeight - scaledNameHeight - scaledColorHeight) / 2 - scaledRarityHeight, scaledRarityWidth, scaledRarityHeight);
     ctx.drawImage(colorImage, (canvasWidth - scaledColorWidth) / 2, (canvasHeight - scaledColorHeight) / 2 + scaledNameHeight, scaledColorWidth, scaledColorHeight);
 
     // Return the combined image as a data URL
     return canvas.toDataURL();
 }
+
 
 
 
