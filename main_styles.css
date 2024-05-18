@@ -66,40 +66,44 @@ nav ul {
     color: black; /* Change text color to black */
 }
 
-.dropdown-list li:hover,
-.dropdown-list li input[type="checkbox"]:checked + label {
-    background-color: #8b0000; /* Dark red background color */
-    color: #fff; /* White text color */
-}
-
 .dropdown-list input[type="checkbox"] {
     margin-right: 10px;
 }
 
+/* Define styles for the container of selected options */
 .selected-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 10px;
+    display: flex; /* Display selected options in a flex container */
+    flex-wrap: wrap; /* Allow wrapping of options when there's not enough space */
+    gap: 5px; /* Define the gap between options */
+    margin-top: 10px; /* Add margin at the top of the container */
 }
 
+/* Define styles for each selected option */
 .selected-option {
-    background-color: #007bff;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    cursor: pointer; /* Add cursor pointer */
+    background-color: #007bff; /* Default background color for selected option */
+    color: white; /* Text color for selected option */
+    padding: 5px 10px; /* Add padding to the option */
+    border-radius: 4px; /* Add rounded corners to the option */
+    display: flex; /* Display option as a flex container */
+    align-items: center; /* Center content vertically */
+    cursor: pointer; /* Change cursor to pointer to indicate clickability */
+    transition: background-color 0.3s ease; /* Add transition effect to background color */
 }
 
+/* Define styles when hovering over a selected option */
 .selected-option:hover {
-    background-color: #8b0000; /* Dark red background color */
+    background-color: #8b0000; /* Dark red background color when hovered */
 }
 
+/* Define styles for the remove option (the "x") within a selected option */
 .selected-option .remove-option {
-    margin-left: 5px;
-    font-weight: bold;
+    margin-left: 5px; /* Add space between the option text and remove option */
+    font-weight: bold; /* Make the remove option text bold */
+}
+
+/* Define styles when hovering over the remove option */
+.selected-option .remove-option:hover {
+    color: #ff0000; /* Change remove option text color to red when hovered */
 }
 
 #toggle-all {
