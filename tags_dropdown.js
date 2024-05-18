@@ -131,6 +131,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+        // Add click event listener to each selected option
+    document.querySelectorAll(".selected-option").forEach(option => {
+        option.addEventListener("click", function() {
+            this.remove(); // Remove the clicked selected option
+        });
+    });
+    
     // Expose the getSelectedValues function to the global scope
     window.getSelectedValues = getSelectedValues;
 
