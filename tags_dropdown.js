@@ -35,13 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 checkbox.checked = true;
             }
 
-            checkbox.addEventListener('change', (event) => {
-                if (event.target.checked) {
+            // Toggle checkbox state and update selected options
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
                     selectedOptions.add(option);
                 } else {
                     selectedOptions.delete(option);
                 }
-                updateSelectedOptionsDisplay(); // Update selected options display after checkbox change
+                updateSelectedOptionsDisplay();
             });
 
             const label = document.createElement('label');
@@ -79,9 +80,10 @@ document.addEventListener('DOMContentLoaded', () => {
             tag.className = 'selected-option';
             tag.textContent = option;
 
+            // Remove option when clicked and update selected options
             tag.addEventListener('click', () => {
                 selectedOptions.delete(option);
-                updateSelectedOptionsDisplay(); // Update selected options display after option removal
+                updateSelectedOptionsDisplay();
                 const checkbox = document.getElementById(`option-${option}`);
                 if (checkbox) {
                     checkbox.checked = false;
@@ -117,41 +119,39 @@ document.addEventListener('DOMContentLoaded', () => {
     // Populate the dropdown initially with all options
     populateDropdown(options);
 
-    // Add click event listener to dropdown list
-    document.getElementById("dropdown-list").addEventListener("click", function(event) {
-    const selectedOption = event.target.closest("li"); // Find the closest li element
-    if (selectedOption) {
-        const checkbox = selectedOption.querySelector("input[type='checkbox']");
-        if (checkbox) {
-            checkbox.checked = !checkbox.checked; // Toggle checkbox state
-            if (checkbox.checked) {
-                selectedOptions.add(checkbox.value); // Add option to selected options
-            } else {
-                selectedOptions.delete(checkbox.value); // Remove option from selected options
+    // Toggle checkbox state and update selected options
+    dropdownList.addEventListener('click', (event) => {
+        const selectedOption = event.target.closest("li");
+        if (selectedOption) {
+            const checkbox = selectedOption.querySelector("input[type='checkbox']");
+            if (checkbox) {
+                checkbox.checked = !checkbox.checked;
+                const option = checkbox.value;
+                if (checkbox.checked) {
+                    selectedOptions.add(option);
+                } else {
+                    selectedOptions.delete(option);
+                }
+                updateSelectedOptionsDisplay();
             }
-            updateSelectedOptionsDisplay(); // Update selected options display after checkbox change
         }
-    }
-});
-;
+    });
 
     // Expose the getSelectedValues function to the global scope
     window.getSelectedValues = getSelectedValues;
 
-    // Event listener for toggle all checkbox
+    // Toggle all checkbox state and update selected options
     toggleAllCheckbox.addEventListener('change', (event) => {
         const checkboxes = dropdownList.querySelectorAll('input[type="checkbox"]');
-        if (event.target.checked) {
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = true;
-                selectedOptions.add(checkbox.value);
-            });
-        } else {
-            checkboxes.forEach(checkbox => {checkbox.checked = false;
-                selectedOptions.delete(checkbox.value);
-                });
-                }
-            updateSelectedOptionsDisplay(); // Update selected options display after checkbox change
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = event.target.checked;
+            const option = checkbox.value;
+            if (event.target.checked) {
+                selectedOptions.add(option);
+            } else {
+                selectedOptions.delete(option);
+            }
+        });
+        updateSelectedOptionsDisplay();
     });
 });
-               
