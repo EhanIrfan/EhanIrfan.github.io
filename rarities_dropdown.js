@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectedOptions = new Set();
 
     // Define the predetermined options
-    const options = ["Sparking", "Extreme", "Hero", "LL", "Ul];
+    const options = ["Sparking", "Extreme", "Hero", "LL", "Ul"];
 
     // Populate the dropdown list with options
     function populateDropdown(filteredOptions) {
