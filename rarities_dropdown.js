@@ -1,13 +1,13 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('rarities-dropdown-input');
     const dropdownList = document.getElementById('rarities-dropdown-list');
     const selectedOptionsContainer = document.getElementById('rarities-selected-options');
     const toggleAllCheckbox = document.getElementById('rarities-toggle-all');
     const selectedOptions = new Set();
+    let currentlyOpenDropdown = null;
 
     // Define the predetermined options
-    const options = ["Sparking", "Extreme", "Hero", "LL", "Ul"];
+    const options = ["Hero", "Extreme", "Sparking", "LL", "Ul"];
 
     // Populate the dropdown list with options
     function populateDropdown(filteredOptions) {
@@ -45,12 +45,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Open the dropdown
     function openDropdown() {
+        if (currentlyOpenDropdown && currentlyOpenDropdown !== dropdownList) {
+            currentlyOpenDropdown.style.display = 'none';
+        }
         dropdownList.style.display = 'block';
+        currentlyOpenDropdown = dropdownList;
     }
 
     // Close the dropdown
     function closeDropdown() {
         dropdownList.style.display = 'none';
+        currentlyOpenDropdown = null;
     }
 
     // Filter options based on input
