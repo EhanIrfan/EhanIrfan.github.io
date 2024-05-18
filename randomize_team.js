@@ -88,4 +88,6 @@ document.getElementById('randomize-button').addEventListener('click', () => {
     fetchFighters().then(fighters => {
         randomizeTeam(fighters);
     }).catch(error => {
-        console
+        console.error('Error:', error);
+    });
+});
