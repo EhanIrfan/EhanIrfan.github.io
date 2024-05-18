@@ -109,6 +109,32 @@ nav ul {
 #toggle-all {
     margin-top: 10px;
 }
+
+#random-team {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.fighter {
+    flex: 0 0 33%; /* Each fighter takes up 33% of the width */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.fighter img {
+    max-width: 100%;
+    height: auto;
+}
+
+.names-list {
+    text-align: center;
+    margin-top: 20px;
+}
+
 }
 
 .selected-option .remove-option:hover {
