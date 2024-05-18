@@ -1,48 +1,11 @@
-
 import { fetchFighters } from './parse_data.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const fighters = await fetchFighters();
 
-    // Filter fighters based on user selections
-    const selectedTags = getSelectedOptions('tags-selected-options');
-    const selectedEpisodes = getSelectedOptions('episodes-selected-options');
-    const selectedColors = getSelectedOptions('colors-selected-options');
-    const selectedRarities = getSelectedOptions('rarities-selected-options');
-
-    const filteredFighters = fighters.filter(fighter => {
-        return (
-            fighter.tags.some(tag => selectedTags.includes(tag)) ||
-            selectedEpisodes.includes(fighter.epi)
-        ) && selectedColors.includes(fighter.color) && selectedRarities.includes(fighter.rarity);
+    document.getElementById('randomize-button').addEventListener('click', () => {
+        displayRandomFighters(fighters);
     });
-
-    // Randomly select six fighters
-    const selectedFighters = [];
-    for (let i = 0; i < 6; i++) {
-        const randomIndex = Math.floor(Math.random() * filteredFighters.length);
-        selectedFighters.push(filteredFighters[randomIndex]);
-        filteredFighters.splice(randomIndex, 1); // Remove the selected fighter to avoid duplicates
-    }
-
-    // Display combined images and names
-    const combinedImagesContainer = document.getElementById('combined-images-container');
-    const selectedFightersNames = document.getElementById('selected-fighters-names');
-    combinedImagesContainer.innerHTML = '';
-    selectedFightersNames.innerHTML = '';
-
-    for (const fighter of selectedFighters) {
-        const combinedImageUrl = await combineImages(fighter.imgPaths);
-        const imgElement = document.createElement('img');
-        imgElement.src = combinedImageUrl;
-        imgElement.style.width = '200px';
-        imgElement.style.height = '200px';
-        combinedImagesContainer.appendChild(imgElement);
-
-        const nameElement = document.createElement('p');
-        nameElement.textContent = `${fighter.color} ${fighter.rarity} ${fighter.name} (${fighter.dbl})`;
-        selectedFightersNames.appendChild(nameElement);
-    }
 });
 
 function getSelectedOptions(containerId) {
@@ -102,4 +65,46 @@ async function combineImages(paths) {
 
     // Return the combined image as a data URL
     return canvas.toDataURL();
+}
+
+async function displayRandomFighters(fighters) {
+    // Filter fighters based on user selections
+    const selectedTags = getSelectedOptions('tags-selected-options');
+    const selectedEpisodes = getSelectedOptions('episodes-selected-options');
+    const selectedColors = getSelectedOptions('colors-selected-options');
+    const selectedRarities = getSelectedOptions('rarities-selected-options');
+
+    const filteredFighters = fighters.filter(fighter => {
+        return (
+            fighter.tags.some(tag => selectedTags.includes(tag)) ||
+            selectedEpisodes.includes(fighter.epi)
+        ) && selectedColors.includes(fighter.color) && selectedRarities.includes(fighter.rarity);
+    });
+
+    // Randomly select six fighters
+    const selectedFighters = [];
+    for (let i = 0; i < 6; i++) {
+        const randomIndex = Math.floor(Math.random() * filteredFighters.length);
+        selectedFighters.push(filteredFighters[randomIndex]);
+        filteredFighters.splice(randomIndex, 1); // Remove the selected fighter to avoid duplicates
+    }
+
+    // Display combined images and names
+    const combinedImagesContainer = document.getElementById('combined-images-container');
+    const selectedFightersNames = document.getElementById('selected-fighters-names');
+    combinedImagesContainer.innerHTML = '';
+    selectedFightersNames.innerHTML = '';
+
+    for (const fighter of selectedFighters) {
+        const combinedImageUrl = await combineImages(fighter.imgPaths);
+        const imgElement = document.createElement('img');
+        imgElement.src = combinedImageUrl;
+        imgElement.style.width = '200px';
+        imgElement.style.height = '200px';
+        combinedImagesContainer.appendChild(imgElement);
+
+        const nameElement = document.createElement('p');
+        nameElement.textContent = `${fighter.color} ${fighter.rarity} ${fighter.name} (${fighter.dbl})`;
+        selectedFightersNames.appendChild(nameElement);
+    }
 }
