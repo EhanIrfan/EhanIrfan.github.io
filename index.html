@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>URD212 — Flashcards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #100f0a;
+  --s1:      #1a1812;
+  --s2:      #24201a;
+  --border:  #3e3318;
+  --gold:    #b8891f;
+  --gold-hi: #d4a232;
+  --cream:   #ece0c4;
+  --dim:     #7a6a48;
+  --green:   #4a9268;
+  --red:     #b84c42;
+  --blue:    #5578a8;
+  --pink:    #a85578;
+}
+
+body {
+  background: var(--bg);
+  color: var(--cream);
+  font-family: 'DM Sans', sans-serif;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Ambient glow */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 15% 90%, rgba(184,137,31,0.07) 0%, transparent 100%),
+    radial-gradient(ellipse 50% 40% at 85% 10%, rgba(184,137,31,0.05) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* =========================================
+   START SCREEN
+   ========================================= */
+#start-screen {
+  position: fixed; inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.4rem;
+  z-index: 20;
+  background: var(--bg);
+}
+
+#start-screen.hidden { display: none; }
+
+.s-ornament {
+  color: var(--gold);
+  font-size: 0.55rem;
+  letter-spacing: 0.7em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.s-urdu {
+  font-family: 'Noto Nastaliq Urdu', serif;
+  font-size: 5rem;
+  color: var(--gold-hi);
+  line-height: 2;
+  direction: rtl;
+  text-shadow: 0 0 60px rgba(212, 162, 50, 0.25);
+}
+
+.s-rule {
+  width: 100px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.s-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  color: var(--cream);
+  letter-spacing: 0.12em;
+}
+
+.s-sub {
+  font-size: 0.75rem;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+}
+
+/* =========================================
+   GAME SCREEN
+   ========================================= */
+#game-screen {
+  position: fixed; inset: 0;
+  display: none;
+  flex-direction: column;
+  z-index: 10;
+}
+
+#game-screen.active { display: flex; }
+
+/* --- Stats Bar --- */
+.stats-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 54px;
+  border-bottom: 1px solid var(--border);
+  background: var(--s1);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.stat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.stat-lbl {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--dim);
+}
+
+.stat-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+  min-width: 2ch;
+}
+
+.stat-val.gold  { color: var(--gold-hi); }
+.stat-val.green { color: var(--green); }
+.stat-val.red   { color: var(--red); }
+
+.stats-right { display: flex; gap: 2rem; }
+
+.stats-center {
+  position: absolute;
+  left: 50%; transform: translateX(-50%);
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* --- Main Area --- */
+.main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  padding: 1.5rem 1.5rem 2.5rem;
+  overflow: hidden;
+}
+
+/* --- Card --- */
+.card {
+  width: 100%;
+  max-width: 840px;
+  background: var(--s1);
+  border: 1px solid var(--border);
+  position: relative;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Corner accents */
+.card::before, .card::after {
+  content: '◆';
+  position: absolute;
+  color: var(--gold);
+  font-size: 0.45rem;
+  line-height: 1;
+  opacity: 0.7;
+}
+.card::before { top: -0.3rem; left: -0.15rem; }
+.card::after  { bottom: -0.3rem; right: -0.15rem; }
+
+.card.exit {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--s2);
+}
+
+.card-num {
+  font-size: 0.6rem;
+  color: var(--dim);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.card-dir {
+  font-size: 0.6rem;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+}
+
+/* --- Word Table --- */
+.word-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.word-table th {
+  padding: 0.55rem 0.6rem;
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dim);
+  background: var(--s2);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.word-table td {
+  height: 88px;
+  border: 1px solid var(--border);
+  text-align: center;
+  vertical-align: middle;
+  padding: 0.6rem;
+  transition: background 0.3s ease;
+}
+
+/* Column widths */
+.col-en { width: 23%; }
+.col-ur { width: 27%; }
+.col-ge { width: 11%; }
+.col-ca { width: 22%; }
+.col-pl { width: 17%; }
+
+/* ---- Cell States ---- */
+
+/* Hidden */
+.state-hidden .cell-inner {
+  font-size: 1.4rem;
+  color: var(--border);
+  user-select: none;
+  display: block;
+}
+
+/* Question (the one shown initially) */
+.state-question {
+  background: rgba(184, 137, 31, 0.08);
+}
+
+/* Revealed cells animate in */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.state-revealed .cell-inner {
+  display: block;
+  animation: fadeUp 0.32s ease forwards;
+}
+
+/* English cell content */
+td.col-en.state-question .cell-inner,
+td.col-en.state-revealed .cell-inner {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--cream);
+}
+
+/* Urdu cell content */
+td.col-ur.state-question .cell-inner,
+td.col-ur.state-revealed .cell-inner {
+  font-family: 'Noto Nastaliq Urdu', serif;
+  font-size: 1.7rem;
+  direction: rtl;
+  line-height: 2.2;
+  color: var(--cream);
+}
+
+/* Gender colors */
+td.col-ge.state-revealed .cell-inner       { font-size: 0.75rem; letter-spacing: 0.04em; }
+td.col-ge.state-revealed .cell-inner.m-col { color: var(--blue);  font-weight: 500; }
+td.col-ge.state-revealed .cell-inner.f-col { color: var(--pink);  font-weight: 500; }
+td.col-ge.state-revealed .cell-inner.n-col { color: var(--dim); }
+
+/* Category */
+td.col-ca.state-revealed .cell-inner {
+  font-size: 0.78rem;
+  color: var(--cream);
+  opacity: 0.85;
+}
+
+/* Plural */
+td.col-pl.state-revealed .cell-inner {
+  font-family: 'Noto Nastaliq Urdu', serif;
+  font-size: 1.4rem;
+  direction: rtl;
+  line-height: 2;
+  color: var(--cream);
+}
+td.col-pl.state-revealed .cell-inner.no-plural {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  color: var(--dim);
+  direction: ltr;
+}
+
+/* =========================================
+   BUTTONS
+   ========================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.62rem 1.8rem;
+  border: 1px solid var(--gold);
+  background: transparent;
+  color: var(--gold-hi);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease;
+}
+
+.btn:hover { background: var(--gold); color: var(--bg); }
+.btn:focus-visible { outline: 1px solid var(--gold-hi); outline-offset: 2px; }
+
+.btn-ok { border-color: var(--green); color: var(--green); }
+.btn-ok:hover { background: var(--green); color: #fff; }
+
+.btn-no { border-color: var(--red); color: var(--red); }
+.btn-no:hover { background: var(--red); color: #fff; }
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* =========================================
+   PROMPT & HINT
+   ========================================= */
+.prompt {
+  font-size: 0.75rem;
+  color: var(--dim);
+  letter-spacing: 0.07em;
+  text-align: center;
+}
+
+.hint {
+  font-size: 0.6rem;
+  color: rgba(122, 106, 72, 0.45);
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+/* Progress bar */
+.progress-wrap {
+  width: 100%;
+  max-width: 840px;
+}
+.progress-bar {
+  height: 2px;
+  width: 100%;
+  background: var(--s2);
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-hi) 100%);
+  transition: width 0.4s ease;
+}
+
+/* Score flash */
+.flash {
+  position: fixed;
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 100;
+}
+
+@keyframes flashAnim {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(-4px); }
+  15%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+  70%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.flash.go { animation: flashAnim 0.85s ease forwards; }
+.flash.ok  { color: var(--green); }
+.flash.no  { color: var(--red); }
+</style>
+</head>
+<body>
+
+<!-- ====== START SCREEN ====== -->
+<div id="start-screen">
+  <div class="s-ornament">— ◆ ◆ ◆ —</div>
+  <div class="s-urdu">اُردو</div>
+  <div class="s-rule"></div>
+  <div class="s-title">URD212 — Final Word List</div>
+  <div class="s-sub">304 words &nbsp;·&nbsp; Endless mode</div>
+  <div style="height:0.4rem"></div>
+  <button class="btn" onclick="startGame()">▶ &nbsp;Begin</button>
+  <div class="s-ornament" style="margin-top:0.5rem">— ◆ ◆ ◆ —</div>
+</div>
+
+<!-- ====== SCORE FLASH ====== -->
+<div class="flash" id="flash"></div>
+
+<!-- ====== GAME SCREEN ====== -->
+<div id="game-screen">
+
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat-lbl">Time</span>
+      <span class="stat-val gold" id="timer">0:00</span>
+    </div>
+    <div class="stats-center">URD212 Flashcards</div>
+    <div class="stats-right">
+      <div class="stat">
+        <span class="stat-lbl">Correct</span>
+        <span class="stat-val green" id="n-correct">0</span>
+      </div>
+      <div class="stat">
+        <span class="stat-lbl">Wrong</span>
+        <span class="stat-val red" id="n-wrong">0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-area">
+
+    <div class="card" id="card">
+      <div class="card-meta">
+        <span class="card-num" id="card-num">1 / 304</span>
+        <span class="card-dir" id="card-dir">English → Urdu</span>
+      </div>
+      <table class="word-table">
+        <thead>
+          <tr>
+            <th class="col-en">English</th>
+            <th class="col-ur">Urdu</th>
+            <th class="col-ge">Gender</th>
+            <th class="col-ca">Category</th>
+            <th class="col-pl">Plural</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-en state-hidden" id="td-en"><span class="cell-inner">—</span></td>
+            <td class="col-ur state-hidden" id="td-ur"><span class="cell-inner">—</span></td>
+            <td class="col-ge state-hidden" id="td-ge"><span class="cell-inner">—</span></td>
+            <td class="col-ca state-hidden" id="td-ca"><span class="cell-inner">—</span></td>
+            <td class="col-pl state-hidden" id="td-pl"><span class="cell-inner">—</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="actions" id="actions">
+      <button class="btn" onclick="reveal()">Reveal Answer</button>
+    </div>
+
+    <div class="prompt" id="prompt">What is this in Urdu?</div>
+    <div class="hint">Space · reveal &nbsp;&nbsp; ← wrong &nbsp;&nbsp; → correct</div>
+
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  WORD DATA  [urdu, english, gender, category, plural]
+//  Plural column is left blank ("") for now — add later!
+// ============================================================
+const W = [
+  ["قلم","Pen","M","Noun",""],
+  ["پینسل","Pencil","F","Noun",""],
+  ["کرسی","Chair","F","Noun",""],
+  ["میز","Table","F","Noun",""],
+  ["بتی","Light / Lightbulb / Lamp","F","Noun",""],
+  ["کتاب","Book","F","Noun",""],
+  ["کاپی","Notebook","F","Noun",""],
+  ["کاغذ","Paper / A Sheet of Paper","M","Noun",""],
+  ["گھڑی","Watch / Clock","F","Noun",""],
+  ["کوڑے دان","Dustbin","M","Noun",""],
+  ["تصویر","Picture","F","Noun",""],
+  ["نقشہ","Map","M","Noun",""],
+  ["قالین","Carpet","M","Noun",""],
+  ["چیز","Thing / Object","F","Noun",""],
+  ["دیوار","Wall","F","Noun",""],
+  ["چھت","Roof","F","Noun",""],
+  ["دروازہ","Door","M","Noun",""],
+  ["فرش","Floor","M","Noun",""],
+  ["کھڑکی","Window","F","Noun",""],
+  ["زمین","Ground / Earth / Land","F","Noun",""],
+  ["پلنگ","Bed","M","Noun",""],
+  ["کمپیوٹر","Computer","M","Noun",""],
+  ["شیشہ","Mirror","M","Noun",""],
+  ["صوفہ","Sofa","M","Noun",""],
+  ["پردہ","Curtain","M","Noun",""],
+  ["چادر","Sheet / Bedsheet","F","Noun",""],
+  ["تکیہ","Pillow / Cushion","M","Noun",""],
+  ["لحاف","Blanket","M","Noun",""],
+  ["پنکھا","Fan","M","Noun",""],
+  ["موم بتی","Candle","F","Noun",""],
+  ["دیا سلائی","Matchstick","F","Noun",""],
+  ["بوتل","Bottle","F","Noun",""],
+  ["ڈبا","Box","M","Noun",""],
+  ["دراز","Drawer","F","Noun",""],
+  ["الماری","Cupboard / Closet / Almirah","F","Noun",""],
+  ["شمال","North","M","Noun",""],
+  ["جنوب","South","M","Noun",""],
+  ["مشرق","East","M","Noun",""],
+  ["مغرب","West","M","Noun",""],
+  ["محلہ","Neighbourhood / Quarter","M","Noun",""],
+  ["شہر","City","M","Noun",""],
+  ["ملک","Country","M","Noun",""],
+  ["ممالک","Countries","M","Noun",""],
+  ["صوبہ","Province / State","M","Noun",""],
+  ["خطہ","Region","M","Noun",""],
+  ["حصہ","Part","M","Noun",""],
+  ["دنیا","World","F","Noun",""],
+  ["آبادی","Population","F","Noun",""],
+  ["جغرافیہ","Geography","M","Noun",""],
+  ["موسم","Weather","M","Noun",""],
+  ["آب و ہوا","Climate","F","Noun",""],
+  ["سورج","Sun","M","Noun",""],
+  ["دھوپ","Sunshine","F","Noun",""],
+  ["بارش","Rain","F","Noun",""],
+  ["دھند","Fog","F","Noun",""],
+  ["اولے","Hail","M","Noun",""],
+  ["بادل","Cloud","M","Noun",""],
+  ["طوفان","Storm","M","Noun",""],
+  ["ہوا","Wind","F","Noun",""],
+  ["آسمان","Sky","M","Noun",""],
+  ["سردیاں","Winter","F","Noun",""],
+  ["گرمیاں","Summer","F","Noun",""],
+  ["بہار","Spring","F","Noun",""],
+  ["پت جھڑ","Fall / Autumn","M","Noun",""],
+  ["برسات","Rainy Season","F","Noun",""],
+  ["گھر","Home","M","Noun",""],
+  ["مکان","House","M","Noun",""],
+  ["کمرہ","Room","M","Noun",""],
+  ["عمارت","Building","F","Noun",""],
+  ["ہسپتال","Hospital","M","Noun",""],
+  ["سکول","School","M","Noun",""],
+  ["دفتر","Office","M","Noun",""],
+  ["ریستوراں","Restaurant","M","Noun",""],
+  ["عجائب گھر","Museum","M","Noun",""],
+  ["مسجد","Mosque","F","Noun",""],
+  ["سنیما","Cinema","M","Noun",""],
+  ["چڑیا گھر","Zoo","M","Noun",""],
+  ["دکان","Store","F","Noun",""],
+  ["بازار","Market","M","Noun",""],
+  ["سڑک","Road","F","Noun",""],
+  ["چوک","Square / Intersection","M","Noun",""],
+  ["چوراہہ","Square / Intersection","M","Noun",""],
+  ["ڈاک خانہ","Post Office","M","Noun",""],
+  ["تھانہ","Police Station","M","Noun",""],
+  ["پٹرول پمپ","Gas Station","M","Noun",""],
+  ["بس اسٹیشن / لاری اڈا","Bus Stand / Station","M","Noun",""],
+  ["راستہ","Way / Directions","M","Noun",""],
+  ["باغ","Garden","M","Noun",""],
+  ["پارک","Park","M","Noun",""],
+  ["آنگن","Courtyard","M","Noun",""],
+  ["دالان","Hallway / Lobby","M","Noun",""],
+  ["لڑکا","Boy","M","Noun",""],
+  ["لڑکی","Girl","F","Noun",""],
+  ["آدمی","Man","M","Noun",""],
+  ["عورت","Woman","F","Noun",""],
+  ["بندہ","Person","M","Noun",""],
+  ["والد","Father","M","Noun",""],
+  ["والدہ","Mother","F","Noun",""],
+  ["بھائی","Brother","M","Noun",""],
+  ["بہن","Sister","F","Noun",""],
+  ["ساس","Mother-in-law","F","Noun",""],
+  ["بہو","Daughter-in-law","F","Noun",""],
+  ["سسر","Father-in-law","M","Noun",""],
+  ["داماد","Son-in-law","M","Noun",""],
+  ["خاوند","Husband","M","Noun",""],
+  ["بیوی","Wife","F","Noun",""],
+  ["آنکھ","Eye","F","Noun",""],
+  ["ناک","Nose","F","Noun",""],
+  ["بال","Hair","M","Noun",""],
+  ["ہونٹ","Lips","M","Noun",""],
+  ["گال","Cheek","M","Noun",""],
+  ["کان","Ear","M","Noun",""],
+  ["ہاتھ","Hand","M","Noun",""],
+  ["پاؤں","Foot","M","Noun",""],
+  ["بازو","Arm","M","Noun",""],
+  ["ٹانگ","Leg","F","Noun",""],
+  ["منہ","Face","M","Noun",""],
+  ["شکل","Face","F","Noun",""],
+  ["سر","Head","M","Noun",""],
+  ["ڈاکٹر","Doctor","N/A","Noun",""],
+  ["سائنسدان","Scientist","N/A","Noun",""],
+  ["استاد","Teacher (Male)","M","Noun",""],
+  ["استانی","Teacher (Female)","F","Noun",""],
+  ["سنار","Jeweler","N/A","Noun",""],
+  ["کسان","Farmer","N/A","Noun",""],
+  ["قصائی","Butcher","N/A","Noun",""],
+  ["دکاندار","Shopkeeper","N/A","Noun",""],
+  ["وکیل","Lawyer","N/A","Noun",""],
+  ["منصف","Judge","N/A","Noun",""],
+  ["ہندوستانی","Indian","N/A","Noun",""],
+  ["پاکستانی","Pakistani","N/A","Noun",""],
+  ["کتا","Dog","M","Noun",""],
+  ["بلی","Cat","F","Noun",""],
+  ["دن","Day","M","Noun",""],
+  ["ہفتہ","Week","M","Noun",""],
+  ["مہینہ","Month","M","Noun",""],
+  ["سال","Year","M","Noun",""],
+  ["اتوار","Sunday","M","Noun",""],
+  ["پیر","Monday","M","Noun",""],
+  ["منگل","Tuesday","M","Noun",""],
+  ["بدھ","Wednesday","M","Noun",""],
+  ["جمعرات","Thursday","F","Noun",""],
+  ["جمعہ","Friday","M","Noun",""],
+  ["ہفتہ","Saturday","M","Noun",""],
+  ["وقت","Time","M","Noun",""],
+  ["اکثر","Often","N/A","Adverb",""],
+  ["کبھی نہیں","Never","N/A","Adverb",""],
+  ["کبھی کبھار","Sometimes","N/A","Adverb",""],
+  ["ہمیشہ","Always","N/A","Adverb",""],
+  ["ہر روز","Everyday","N/A","Adverb",""],
+  ["جلدی","Early / Quickly","N/A","Adverb",""],
+  ["سے پہلے","Before (in time)","N/A","Adverb",""],
+  ["کے بعد","After (in time)","N/A","Adverb",""],
+  ["پونے","Quarter to","M","Noun",""],
+  ["سوا","Quarter past","M","Noun",""],
+  ["ساڑھے","Half past","M","Noun",""],
+  ["ڈیڑھ","1:30","M","Noun",""],
+  ["ڈھائی","2:30","M","Noun",""],
+  ["دیر سے","Late","N/A","Adverb",""],
+  ["جلدی","Early","N/A","Adverb",""],
+  ["سیدھے","Directly / Straight","N/A","Adverb",""],
+  ["پاؤ","A quarter","N/A","I. Adjective",""],
+  ["آدھا","Half","N/A","I. Adjective",""],
+  ["پونا","Three quarters","N/A","I. Adjective",""],
+  ["ڈیڑھ","One-and-a-half","N/A","I. Adjective",""],
+  ["ڈھائی","Two-and-a-half","N/A","I. Adjective",""],
+  ["کلو","Kilogram","M","Noun",""],
+  ["گرام","Gram","M","Noun",""],
+  ["چمچ","Spoon","M","Noun",""],
+  ["چائے کا چمچ","Teaspoon","M","Noun",""],
+  ["کھانے کا چمچ","Tablespoon","M","Noun",""],
+  ["میٹر","Meter","M","Noun",""],
+  ["گز","Yard","M","Noun",""],
+  ["کپڑا","Cloth","M","Noun",""],
+  ["کپڑے","Clothes","M","Noun",""],
+  ["قمیض","Tunic / Shirt","F","Noun",""],
+  ["شلوار","Shalwaar / Pants","F","Noun",""],
+  ["دوپٹا","Dupatta","M","Noun",""],
+  ["جوتا","Shoe","M","Noun",""],
+  ["نتھنی","Nose Ring","F","Noun",""],
+  ["بالی","Earring","F","Noun",""],
+  ["گوشت","Meat","M","Noun",""],
+  ["قیمہ","Minced Meat","M","Noun",""],
+  ["چینی","Sugar","F","Noun",""],
+  ["نمک","Salt","M","Noun",""],
+  ["کالی مرچ","Black Pepper","F","Noun",""],
+  ["الائچی","Cardamom","F","Noun",""],
+  ["چائے","Tea","F","Noun",""],
+  ["چاول","Rice","M","Noun",""],
+  ["اسٹیشن","Station","M","Noun",""],
+  ["گاڑی","Car","F","Noun",""],
+  ["اچھا","Good","N/A","V. Adjective",""],
+  ["برا","Bad","N/A","V. Adjective",""],
+  ["نیا","New","N/A","V. Adjective",""],
+  ["پرانا","Old","N/A","V. Adjective",""],
+  ["بڑا","Big","N/A","V. Adjective",""],
+  ["لمبا","Tall / Long","N/A","V. Adjective",""],
+  ["چھوٹا","Small / Short","N/A","V. Adjective",""],
+  ["اونچا","High","N/A","V. Adjective",""],
+  ["نیچا","Low","N/A","V. Adjective",""],
+  ["پتلا","Thin","N/A","V. Adjective",""],
+  ["موٹا","Fat / Thick","N/A","V. Adjective",""],
+  ["چوڑا","Wide","N/A","V. Adjective",""],
+  ["ہلکا","Light","N/A","V. Adjective",""],
+  ["بھاری","Heavy","N/A","I. Adjective",""],
+  ["خراب","Broken / Rotten","N/A","I. Adjective",""],
+  ["خوبصورت","Beautiful","N/A","I. Adjective",""],
+  ["بدصورت","Ugly","N/A","I. Adjective",""],
+  ["بزدل","Coward","N/A","I. Adjective",""],
+  ["ذہین","Intelligent","N/A","I. Adjective",""],
+  ["بے وقوف","Stupid","N/A","I. Adjective",""],
+  ["نادان","Immature","N/A","I. Adjective",""],
+  ["قابل","Capable","N/A","I. Adjective",""],
+  ["ہوشیار","Clever","N/A","I. Adjective",""],
+  ["وسیع","Vast / Wide","N/A","I. Adjective",""],
+  ["تنگ","Narrow","N/A","I. Adjective",""],
+  ["صاف","Clean","N/A","I. Adjective",""],
+  ["آسان","Easy","N/A","I. Adjective",""],
+  ["مشکل","Difficult","N/A","I. Adjective",""],
+  ["فارغ","Free (not busy)","N/A","I. Adjective",""],
+  ["مصروف","Busy","N/A","I. Adjective",""],
+  ["مُفت","Free (no cost)","N/A","I. Adjective",""],
+  ["سستا","Cheap","N/A","V. Adjective",""],
+  ["مہنگا","Expensive","N/A","V. Adjective",""],
+  ["مشہور","Famous","N/A","I. Adjective",""],
+  ["شاندار","Splendid / Grand / Glorious","N/A","I. Adjective",""],
+  ["زبردست","Great","N/A","I. Adjective",""],
+  ["آنا","To come / arrive","N/A","Verb",""],
+  ["جانا","To go / leave","N/A","Verb",""],
+  ["اٹھنا","To get up","N/A","Verb",""],
+  ["جاگنا","To wake up","N/A","Verb",""],
+  ["لینا","To take / get","N/A","Verb",""],
+  ["دینا","To give","N/A","Verb",""],
+  ["دیکھنا","To see","N/A","Verb",""],
+  ["بولنا","To say","N/A","Verb",""],
+  ["کہنا","To say","N/A","Verb",""],
+  ["بتانا","To tell","N/A","Verb",""],
+  ["سُنانا","To tell / narrate","N/A","Verb",""],
+  ["سُننا","To listen","N/A","Verb",""],
+  ["ڈالنا","To put / insert","N/A","Verb",""],
+  ["سیکھنا","To learn","N/A","Verb",""],
+  ["پڑھنا","To read / study","N/A","Verb",""],
+  ["پڑھانا","To teach","N/A","Verb",""],
+  ["لکھنا","To write","N/A","Verb",""],
+  ["کھانا","To eat","N/A","Verb",""],
+  ["پینا","To drink","N/A","Verb",""],
+  ["پکانا","To cook","N/A","Verb",""],
+  ["ابالنا","To boil","N/A","Verb",""],
+  ["انڈیلنا","To pour","N/A","Verb",""],
+  ["چکھنا","To taste","N/A","Verb",""],
+  ["خریدنا","To buy","N/A","Verb",""],
+  ["خرچنا","To spend","N/A","Verb",""],
+  ["کام کرنا","To work / do a task","N/A","Verb",""],
+  ["رہنا","To live / stay (somewhere)","N/A","Verb",""],
+  ["ٹھہرنا","To stay","N/A","Verb",""],
+  ["ناشتہ کرنا","To have breakfast","N/A","Verb",""],
+  ["چلنا","To walk","N/A","Verb",""],
+  ["ٹہلنا","To stroll","N/A","Verb",""],
+  ["مڑنا","To turn","N/A","Verb",""],
+  ["پہنچنا","To reach","N/A","Verb",""],
+  ["دوڑنا","To run","N/A","Verb",""],
+  ["تیرنا","To swim","N/A","Verb",""],
+  ["ڈھونڈنا","To find","N/A","Verb",""],
+  ["آرام کرنا","To rest","N/A","Verb",""],
+  ["ورزش کرنا","To exercise","N/A","Verb",""],
+  ["بحث کرنا","To argue","N/A","Verb",""],
+  ["صفائی کرنا","To clean","N/A","Verb",""],
+  ["شور کرنا","To make noise","N/A","Verb",""],
+  ["ہنسی مذاق کرنا","To joke around","N/A","Verb",""],
+  ["وقت گزارنا","To pass the time","N/A","Verb",""],
+  ["کا خیال رکھنا","To take care of","N/A","Verb",""],
+  ["روانہ ہونا","To depart","N/A","Verb",""],
+  ["گانا","To sing","N/A","Verb",""],
+  ["بجانا","To play an instrument","N/A","Verb",""],
+  ["کھیلنا","To play a sport / game","N/A","Verb",""],
+  ["لڑنا","To fight","N/A","Verb",""],
+  ["ختم کرنا","To finish","N/A","Verb",""],
+  ["گھومنا","To roam / wander / explore","N/A","Verb",""],
+  ["فیصلہ کرنا","To decide","N/A","Verb",""],
+  ["تیار کرنا","To prepare (something)","N/A","Verb",""],
+  ["تیار ہونا","To get ready","N/A","Verb",""],
+  ["پر","On","N/A","Postposition",""],
+  ["میں","In","N/A","Postposition",""],
+  ["کے آگے","Ahead of","N/A","Postposition",""],
+  ["کے سامنے","In front of","N/A","Postposition",""],
+  ["کے پیچھے","Behind","N/A","Postposition",""],
+  ["کی طرف","In the direction of","N/A","Postposition",""],
+  ["کے دائیں طرف","To the right of","N/A","Postposition",""],
+  ["کے بائیں طرف","To the left of","N/A","Postposition",""],
+  ["کے اوپر","Above","N/A","Postposition",""],
+  ["کے نیچے","Below","N/A","Postposition",""],
+  ["کے پاس","Near to","N/A","Postposition",""],
+  ["کے بغل میں","Next to","N/A","Postposition",""],
+  ["تک","Up till","N/A","Postposition",""],
+  ["کے نزدیک","Near to","N/A","Postposition",""],
+  ["سے دور","Far away from","N/A","Postposition",""],
+  ["سے پہلے","Before","N/A","Postposition",""],
+  ["کے بعد","After","N/A","Postposition",""],
+  ["اگر۔۔۔ تو۔۔۔","If… then…","N/A","Sub. Expression",""],
+  ["شاید","Maybe","N/A","Sub. Expression",""],
+  ["ممکن ہے کہ","It's possible that","N/A","Sub. Expression",""],
+  ["ہو سکتا ہے کہ","It may happen that","N/A","Sub. Expression",""],
+  ["غالباً","Probably","N/A","Sub. Expression",""],
+  ["کہیں ایسا نہ ہو کہ","Hopefully it doesn't happen that","N/A","Sub. Expression",""],
+];
+
+// ============================================================
+//  GAME STATE
+// ============================================================
+let deck      = [];
+let deckPos   = 0;
+let nCorrect  = 0;
+let nWrong    = 0;
+let secs      = 0;
+let timerID   = null;
+let showingEn = true;   // true = English shown as question
+let revealed  = false;
+
+// ---- Helpers ----
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function setCell(id, colClass, state, content, innerClass = '') {
+  const td = document.getElementById(id);
+  td.className = `${colClass} state-${state}`;
+  const span = td.querySelector('.cell-inner');
+  span.className = innerClass ? `cell-inner ${innerClass}` : 'cell-inner';
+  span.textContent = content;
+}
+
+// ---- Start ----
+function startGame() {
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('game-screen').classList.add('active');
+  deck    = shuffle(W.map((_, i) => i));
+  deckPos = 0;
+  nCorrect = nWrong = secs = 0;
+  timerID = setInterval(() => {
+    secs++;
+    const m = Math.floor(secs / 60), s = secs % 60;
+    document.getElementById('timer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+  }, 1000);
+  showCard();
+}
+
+// ---- Show question ----
+function showCard() {
+  if (deckPos >= deck.length) {
+    deck = shuffle(W.map((_, i) => i));
+    deckPos = 0;
+  }
+
+  const [urdu, english, gender, category, plural] = W[deck[deckPos]];
+  showingEn = Math.random() < 0.5;
+  revealed  = false;
+
+  // Card meta
+  document.getElementById('card-num').textContent =
+    `${deckPos + 1} / ${deck.length}`;
+  document.getElementById('card-dir').textContent =
+    showingEn ? 'English → Urdu' : 'Urdu → English';
+
+  // Hide all cells
+  setCell('td-en', 'col-en', 'hidden', '—');
+  setCell('td-ur', 'col-ur', 'hidden', '—');
+  setCell('td-ge', 'col-ge', 'hidden', '—');
+  setCell('td-ca', 'col-ca', 'hidden', '—');
+  setCell('td-pl', 'col-pl', 'hidden', '—');
+
+  // Show question cell
+  if (showingEn) {
+    setCell('td-en', 'col-en', 'question', english);
+  } else {
+    setCell('td-ur', 'col-ur', 'question', urdu);
+  }
+
+  // Progress
+  document.getElementById('progress-fill').style.width =
+    `${((deckPos + 1) / deck.length) * 100}%`;
+
+  // Buttons + prompt
+  document.getElementById('actions').innerHTML =
+    `<button class="btn" onclick="reveal()">Reveal Answer</button>`;
+  document.getElementById('prompt').textContent =
+    showingEn ? 'What is this in Urdu?' : 'What does this mean?';
+}
+
+// ---- Reveal answer ----
+function reveal() {
+  if (revealed) return;
+  revealed = true;
+
+  const [urdu, english, gender, category, plural] = W[deck[deckPos]];
+
+  // Re-render question cell (already visible, no animation needed)
+  if (showingEn) {
+    setCell('td-en', 'col-en', 'question', english);
+  } else {
+    setCell('td-ur', 'col-ur', 'question', urdu);
+  }
+
+  // Animate in hidden cells
+  if (showingEn) {
+    setCell('td-ur', 'col-ur', 'revealed', urdu);
+  } else {
+    setCell('td-en', 'col-en', 'revealed', english);
+  }
+
+  // Gender
+  const gLabel = gender === 'M' ? 'Masculine' : gender === 'F' ? 'Feminine' : '—';
+  const gClass = gender === 'M' ? 'm-col' : gender === 'F' ? 'f-col' : 'n-col';
+  setCell('td-ge', 'col-ge', 'revealed', gLabel, gClass);
+
+  // Category
+  setCell('td-ca', 'col-ca', 'revealed', category);
+
+  // Plural
+  if (plural && plural.trim() !== '') {
+    setCell('td-pl', 'col-pl', 'revealed', plural);
+  } else {
+    setCell('td-pl', 'col-pl', 'revealed', '—', 'no-plural');
+  }
+
+  // Buttons + prompt
+  document.getElementById('actions').innerHTML = `
+    <button class="btn btn-no"  onclick="mark(false)">✗ &nbsp;Wrong</button>
+    <button class="btn btn-ok"  onclick="mark(true)">✓ &nbsp;Correct</button>
+  `;
+  document.getElementById('prompt').textContent = 'How did you do?';
+}
+
+// ---- Mark result ----
+function mark(ok) {
+  if (ok) {
+    nCorrect++;
+    document.getElementById('n-correct').textContent = nCorrect;
+    flash('✓  Correct', true);
+  } else {
+    nWrong++;
+    document.getElementById('n-wrong').textContent = nWrong;
+    flash('✗  Wrong', false);
+  }
+
+  // Transition to next card
+  const card = document.getElementById('card');
+  card.classList.add('exit');
+  setTimeout(() => {
+    card.classList.remove('exit');
+    deckPos++;
+    showCard();
+  }, 180);
+}
+
+// ---- Flash message ----
+function flash(msg, ok) {
+  const el = document.getElementById('flash');
+  el.textContent = msg;
+  el.className = `flash ${ok ? 'ok' : 'no'}`;
+  // trigger reflow to restart animation
+  void el.offsetWidth;
+  el.classList.add('go');
+  setTimeout(() => { el.className = 'flash'; }, 850);
+}
+
+// ---- Keyboard shortcuts ----
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('game-screen').classList.contains('active')) return;
+  if (e.code === 'Space') {
+    e.preventDefault();
+    if (!revealed) reveal();
+  } else if (e.code === 'ArrowRight') {
+    if (revealed) mark(true);
+  } else if (e.code === 'ArrowLeft') {
+    if (revealed) mark(false);
+  }
+});
+</script>
+</body>
+</html>
